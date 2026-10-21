@@ -9,7 +9,7 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 - **Left step:** the shield's **headphone and mic jacks**, standing 0.5 mm proud of a shallow recess.
 
 **Size:**
-- Overall: 169.1 W x 166.9 D x 66.0 H mm, including the 3 mm lip at the back.
+- Overall: 169.1 W x 173.9 D x 66.0 H mm.
 - Narrow back: 78.8 mm wide, from 93.8 mm back.
 
 ![back](drumcase_tshape_back.svg)
@@ -18,8 +18,8 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 
 | File | What it is |
 |---|---|
-| `drum_case_hood.step` | Hood: the T-shaped shell, screen face, deck, the 4 Uno standoffs, and 2 back pillars |
-| `drum_case_tray.step` | Bottom and back wall in one piece, T-shaped like the hood, screwed up into it from below |
+| `drum_case_hood.step` | Hood: the T-shaped shell with its back wall, screen face, deck, the 4 Uno standoffs, and the bottom-cover screw blocks |
+| `drum_case_bottom_cover.step` | The bottom cover: a T-shaped floor plate, screwed up into the hood from below |
 | `drum_case_assembly.step` | Both parts, plus the display model, your Uno model (`reference/arduino_uno_r3.step`) and the HW-261 shield model |
 | `drum_case.py` | Parametric CadQuery source. Run `python drum_case.py` |
 | `vs1053_shield/` | The shield model (made by the 4560 cap session, ±1 mm from photos) |
@@ -28,11 +28,11 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 
 ## Design
 
-- **Screen:** the window, knob hole, posts and encoder pocket are identical to the console's. To install it, take the tray off, feed the board in through the bottom and screw it to the 5 posts with M2.5 x 8 screws.
+- **Screen:** the window, knob hole, posts and encoder pocket are identical to the console's. To install it, take the bottom cover off, feed the board in through the bottom and screw it to the 5 posts with M2.5 x 8 screws.
 - **Steps:** the walls where the case steps in sit 9.5 mm behind the screen's parts (`STEP_CLEAR`). That's what lets the screen come off its posts far enough to free the knob shaft, about 15 mm along the face, and then drop out.
 - **Uno:** hangs upside down from the deck, low in the case and centred across it, with its USB end to the right and the power-header edge to the front.
   - It hangs on four D-shaped Ø9 mm standoffs, **30 mm long** (`STANDOFF_DROP` adds 25 mm). Each has four 3 mm gussets with 45° undersides up to the deck.
-  - The Uno's back is 33 mm up, and the bottom of the shield is 10.3 mm up, 7.3 mm above the tray floor.
+  - The Uno's back is 33 mm up, and the bottom of the shield is 10.3 mm up, 7.3 mm above the bottom cover.
   - The hole by the power jack comes from your Uno STEP model.
   - **Screws: 3 x 6 mm** into Ø2.5 x 5.8 mm pilots at the bottom of the standoffs.
   - The board sits 9 mm back from the tightest fit (`UNO_BACK_SHIFT`), so the long front standoffs stay out of the screen's way out.
@@ -45,15 +45,17 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
   - Ø8.8 holes for the two 5.8 mm jack barrels: 1.5 mm all round (`JACK_CLEAR`). That leaves a 1.9 mm web between them.
 - **Fitting the board:** the USB and the jack barrels stick through the narrow walls, 3.0 mm on the right and 2.0 mm on the left. **Flex the narrow walls out and pop the board in.**
 - **Rounded edges:** every outside edge is rounded: R4 on the corners, the steps and the deck edges, plus the R6 ridge and R3 lip. The bottom edges are R2, because the 3 mm walls only have room for that. Where the steps' rounded inside corners meet the deck, two shallow 13° creases are left.
-- **Back lip:** the hood runs 3 mm past the tray's back wall, so the back sits recessed.
-- **Tray:** bottom and back wall, T-shaped like the hood. It's held by 6 **3 x 14 mm wood screws** from below, countersunk:
+- **Back wall:** part of the hood (`BACK_ON_HOOD`), so the hood can print standing on its flat back. `BACK_ON_HOOD = False` puts it back on the bottom cover, with a 3 mm lip on the hood.
+- **Bottom cover:** a floor plate, T-shaped like the hood, sitting inside its walls. It's held by 6 **3 x 14 mm wood screws** from below, countersunk.
+  - Every screw block's pilot has a 0.8 mm 45° lead-in chamfer where the screw enters.
+  - The blocks on the side walls are wedges, tallest at the wall, with 45° undersides sloping back to it (`wedge_block`). They print without support and keep at least 1 mm of plastic over the pilot.
+  - The screws go:
   - 2 into blocks behind the front lip;
   - 2 into blocks in the back corners of the wide part, against the step walls;
-  - 2 into the back pillars.
-- **Back pillars:** two Ø10 pillars run from the deck down to the tray floor behind the board, 20 mm either side of centre.
-  - Each has two 3 mm gussets with 45° undersides along the back wall. There are none toward the board, because they'd hit it.
-  - They're 2.9 mm clear of the shield.
-- **microSD:** the card goes in from the USB end, but the socket's mouth is 14 mm inside the right step. **Take the tray off to swap the card**; the shield faces down, so it's right there.
+  - 2 into blocks in the narrow back's corners.
+- **Back corner blocks:** two 10 mm wedge blocks at floor level in the narrow back's corners, joined to the side and back walls. Their screws are 8 mm in from the outside of both walls. They replaced the full-height pillars.
+- **Room behind the board:** 22 mm from the shield's back edge to the back wall (`REAR_CLEAR`).
+- **microSD:** the card goes in from the USB end, but the socket's mouth is 14 mm inside the right step. **Take the bottom cover off to swap the card**; the shield faces down, so it's right there.
 - **No vents:** the narrow sides carry the plugs.
 
 ## Assembly order
@@ -62,15 +64,15 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 1. Fit the screen.
 2. Fit the shield on the Uno.
 3. Flex the narrow walls and pop the stack in, with the USB-B into the right step and the jacks into the left. Screw it up with the 3 x 6 mm screws.
-4. Screw the tray on.
+4. Screw the bottom cover on.
 
 ## Checks run
 
 - Both parts are valid single solids.
-- No overlaps between the hood, tray, display, Uno and shield, checked against your actual Uno model. The Uno model's header sockets are 0.5 mm taller than real ones, so they overlap the shield's spacers by 0.5 mm in the model only.
+- No overlaps between the hood, bottom cover, display, Uno and shield, checked against your actual Uno model. The Uno model's header sockets are 0.5 mm taller than real ones, so they overlap the shield's spacers by 0.5 mm in the model only.
 - The USB-B face is flush with the outside of the right step, with 1.5 mm round it.
 - The jack fronts are 0.5 mm proud of the left recess, with 1.5 mm round them.
-- The board is 2.9 mm clear of the back pillars and 7.3 mm above the tray floor.
+- The board is 11.7 mm clear of the back corner blocks and 7.3 mm above the bottom cover.
 - The screen's way out is clear: 0.84 mm off the posts and 1.05 mm on the way down.
 - The standoff pilots leave at least 4.6 mm of plastic to the outside.
 - **Not modelled:** how far the walls actually flex. The board needs 2–3 mm. Print it and try; if it's too stiff, say so and I'll split one narrow side into a screwed-on plate.
@@ -83,8 +85,11 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 
 ## Printing
 
-- **Hood:** deck face down on the bed, so the top comes out smooth. Use supports for the slope, the screen posts, the front lip and the side openings. The standoffs, their gussets and the pillars then point up; the gussets' 45° faces need no support.
-- **Tray:** bottom down. It needs no supports.
+- **Hood:** stand it on its flat back wall (about 78 x 66 mm on the bed). The deck and the sides then print as vertical walls, so they come out smooth.
+  - Support the wide screen part, which overhangs the narrow back, and the front lip.
+  - The long standoffs print lying along the bed's direction and need support under them; so do the side openings.
+  - Deck-down still works if you prefer it.
+- **Bottom cover:** a flat plate; print it flat, no supports.
 
 ## Hardware
 
@@ -92,5 +97,5 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 |---|---|
 | Display | 5 x M2.5 x 8 self-tapping screws |
 | Uno | 4 x 3 x 6 mm screws up into the standoffs (no longer than 6 mm) |
-| Tray | 6 x 3 x 14 mm countersunk wood screws (2 front, 2 wing corners, 2 back pillars) |
+| Bottom cover | 6 x 3 x 14 mm countersunk wood screws (2 front, 2 wing corners, 2 back corners) |
 | Feet | 4 rubber feet, up to Ø10 mm |

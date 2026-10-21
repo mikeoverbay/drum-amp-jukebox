@@ -91,7 +91,7 @@ JACK_RECESS_MARGIN = 2.5    # recess reaches this far beyond the jack holes
 JACK_CLEAR = 1.5            # clearance round the jacks (mikeoverbay)
 JACK_HOLE_D = 5.8 + 2 * JACK_CLEAR   # 5.8 mm jack barrels
 STEP_CLEAR = 9.5            # step walls' inner face to the screen's parts: room to take the screen out
-REAR_CLEAR = 12.0           # shield's back edge to the back wall: room for the two back pillars
+REAR_CLEAR = 22.0           # shield's back edge to the back wall (12, then 10 mm more for mikeoverbay)
 UNO_BACK_SHIFT = 9.0        # Uno moved this far back from the tightest fit (mikeoverbay)
 
 # All tray screws: 3 mm wood screws, 14 mm long (mikeoverbay).
@@ -119,7 +119,8 @@ FLOOR_CLEAR = 2.0
 R_SIDE, R_RIDGE, R_LIP = 4.0, 6.0, 3.0
 R_BOTTOM = 2.0                           # bottom outside edges: the 3 mm walls leave room for 2 mm
 CSK_D, SCREW_CLEAR_D, PILOT_D = 6.3, 3.4, 2.5
-BLOCK = 10.0                             # tray screw block width
+BLOCK = 10.0                             # bottom-cover screw block width
+PILOT_CHAMFER = 0.8                      # 45 degree lead-in on the screw pilots
 BLOCK_H = SCREW_L - 3.0 + 2.0            # height: the 14 mm screw goes 11 mm in, plus 2 mm of plastic
 VENT_SIDES = ()                          # no vent grooves: the narrow sides carry the plugs
 VENT_N, VENT_PITCH, VENT_W, VENT_DEPTH, VENT_TOP = 6, 3.5, 1.6, 1.0, 9.0
@@ -132,11 +133,10 @@ DECK_TEXT_DEPTH = 1.0
 DECK_TEXT_CHAMFER = 1.0                  # bottom band of the letters narrowing at 45 deg, so they print face down
                                          # without support; = DECK_TEXT_DEPTH makes the ~2 mm strokes V-shaped
 FOOT_D, FOOT_DEPTH = 10.0, 1.0
-HOOD_BACK_LIP = 3.0                      # hood sides and deck run this far past the tray's back wall (back sits recessed)
-# Back screw pillars behind the Uno: from the deck down to the tray floor, screwed from below.
-PILLAR_D = 10.0
-PILLAR_XS = (-20.0, 20.0)               # two back pillars behind the Uno
-RIB_T, RIB_L = 3.0, 8.0                  # gussets at the top of the pillar: thickness, reach along the deck (45 deg)
+BACK_ON_HOOD = True                      # the back wall is part of the hood, so the hood can print standing on its
+                                         # back; the tray is then just the floor plate (mikeoverbay)
+HOOD_BACK_LIP = 0.0 if BACK_ON_HOOD else 3.0   # with the back on the tray: hood runs this far past it
+RIB_T, RIB_L = 3.0, 8.0                  # standoff gussets: thickness, reach along the deck (45 deg)
 
 # ---------------------------------------------------------------------------
 # Derived geometry
@@ -392,7 +392,7 @@ def t_cavity():
     full = cavity()
     ys = step_y()
     return full.intersect(box(-W, W, -2, ys - WALL, -2, H)).fuse(
-        full.intersect(box(XL + WALL, XR - WALL, -2, D + HOOD_BACK_LIP + 2, -2, H))).clean()
+        full.intersect(box(XL + WALL, XR - WALL, -2, (D - BACK_T) if BACK_ON_HOOD else (D + HOOD_BACK_LIP + 2), -2, H))).clean()
 
 
 def cavity():
@@ -500,9 +500,28 @@ def block_xs():
     return [sx * (W / 2 - WALL - BLOCK / 2) for sx in (-1, 1)]
 
 
+def wedge_block(cx, y0, y1):
+    """Bottom-cover screw block against a side wall: tallest at the wall, its free top sloping
+    45 degrees down and away from it, so it prints without support; BLOCK_H plus a little at the screw."""
+    side = 1 if cx > 0 else -1
+    xw, xin = cx + side * BLOCK / 2, cx - side * BLOCK / 2
+    lift = SCREW_PILOT_D / 2 + 0.75     # so the slope stays 1 mm over the pilot's top on its low side too
+    z0, zw, zi = BOTTOM_T, BOTTOM_T + BLOCK_H + lift + BLOCK / 2, BOTTOM_T + BLOCK_H + lift - BLOCK / 2
+    prof = [(xin, z0), (xw + 0.5 * side, z0), (xw + 0.5 * side, zw + 0.5), (xw, zw + 0.5), (xw, zw), (xin, zi)]
+    return cq.Workplane("XZ", origin=(0, y0, 0)).polyline(prof).close().extrude(-(y1 - y0)).val()
+
+
+def screw_pilot(x, y):
+    """Blind pilot up into a block, with a slight 45 degree chamfer where the screw enters."""
+    c = PILOT_CHAMFER
+    return cq.Solid.makeCylinder(SCREW_PILOT_D / 2, BLOCK_H - 1.0, cq.Vector(x, y, BOTTOM_T - 0.01)).fuse(
+        cq.Solid.makeCone(SCREW_PILOT_D / 2 + c, SCREW_PILOT_D / 2, c + 0.01, cq.Vector(x, y, BOTTOM_T - 0.01)))
+
+
 def pillar_xys():
-    """Back screw pillars: behind the Uno, against the back wall."""
-    return [(x, D - BACK_T - 0.3 - PILLAR_D / 2) for x in PILLAR_XS]
+    """Back tray screws: in the narrow back's two corners, BLOCK / 2 in from the side and back walls."""
+    y = D - BACK_T - BLOCK / 2
+    return [(XL + WALL + BLOCK / 2, y), (XR - WALL - BLOCK / 2, y)]
 
 
 def wing_block_y():
@@ -513,31 +532,24 @@ def wing_block_y():
 def make_hood():
     outer = t_outer()
     hood = screen_features(outer.cut(t_cavity()))
-    # Front tray-screw blocks against the front lip (45 degree backs), as on the console.
+    # Front bottom-cover screw blocks against the front lip (45 degree backs), as on the console.
     for bx in block_xs():
         prof = [(WALL - 0.5, BOTTOM_T), (FRONT_FLOOR + 16, BOTTOM_T), (FRONT_FLOOR + 6, BOTTOM_T + BLOCK_H),
                 (WALL - 0.5, BOTTOM_T + BLOCK_H)]
         blk = cq.Workplane("YZ", origin=(bx, 0, 0)).polyline(prof).close().extrude(BLOCK / 2, both=True).val()
         hood = hood.fuse(blk.intersect(outer))
-        hood = hood.cut(cq.Solid.makeCylinder(SCREW_PILOT_D / 2, BLOCK_H - 1.0, cq.Vector(bx, FRONT_FLOOR + 6, BOTTOM_T - 0.01)))
-    # Rear tray-screw blocks at floor level in the wings' back corners, against the step walls.
+        hood = hood.cut(screw_pilot(bx, FRONT_FLOOR + 6))
+    # Bottom-cover screw blocks at floor level in the wings' back corners, against the side and
+    # step walls, with 45 degree undersides.
     wy = wing_block_y()
     for bx in block_xs():
-        hood = hood.fuse(box(bx - BLOCK / 2, bx + BLOCK / 2 + 0.5 * (1 if bx > 0 else -1), wy - 6, step_y() - WALL + 0.5,
-                             BOTTOM_T, BOTTOM_T + BLOCK_H).intersect(outer))
-        hood = hood.cut(cq.Solid.makeCylinder(SCREW_PILOT_D / 2, BLOCK_H - 1.0, cq.Vector(bx, wy, BOTTOM_T - 0.01)))
-    # Back screw pillars from the deck to the tray floor, with 45 degree gussets to the deck
-    # along the back wall (toward the Uno would hit it).
-    top = H - WALL + 0.5
-    r = PILLAR_D / 2
+        hood = hood.fuse(wedge_block(bx, wy - 6, step_y() - WALL + 0.5).intersect(outer))
+        hood = hood.cut(screw_pilot(bx, wy))
+    # Bottom-cover screw blocks at floor level in the narrow back's corners, joined to the side
+    # and back walls, with 45 degree undersides (they replaced the full-height pillars).
     for px, py in pillar_xys():
-        hood = hood.fuse(cq.Solid.makeCylinder(r, top - BOTTOM_T - 0.3, cq.Vector(px, py, BOTTOM_T + 0.3)))
-        prof = [(0, top), (r + RIB_L, top), (r + RIB_L, H - WALL), (0, H - WALL - RIB_L - r)]
-        for sx in (-1, 1):   # in the XZ plane: local x = world X, local y = world Z
-            rib = cq.Workplane("XZ", origin=(0, py, 0)).polyline([(px + sx * a, z) for a, z in prof]).close() \
-                .extrude(RIB_T / 2, both=True).val()
-            hood = hood.fuse(rib.intersect(outer))
-        hood = hood.cut(cq.Solid.makeCylinder(SCREW_PILOT_D / 2, SCREW_L - BOTTOM_T + 1.0, cq.Vector(px, py, BOTTOM_T)))
+        hood = hood.fuse(wedge_block(px, py - BLOCK / 2, py + BLOCK / 2 + 0.5).intersect(outer))
+        hood = hood.cut(screw_pilot(px, py))
     # Uno standoffs hanging from the deck, clipped to the outer shell.
     bosses, pilots = uno_standoffs()
     for b in bosses:
@@ -603,7 +615,10 @@ def make_tray():
     nl, nr = XL + WALL + 0.3, XR - WALL - 0.3
     tray = box(-xi, xi, FRONT_FLOOR + 0.3, ys - WALL - 0.3, 0, BOTTOM_T)
     tray = tray.fuse(box(nl, nr, ys - WALL - 1, D, 0, BOTTOM_T))
-    tray = tray.fuse(box(nl, nr, D - BACK_T, D, 0, H - WALL - 0.3))
+    if BACK_ON_HOOD:
+        tray = tray.cut(box(nl - 1, nr + 1, D - BACK_T - 0.3, D + 1, -1, BOTTOM_T + 1))   # floor stops inside the back wall
+    else:
+        tray = tray.fuse(box(nl, nr, D - BACK_T, D, 0, H - WALL - 0.3))
     csk_h = (CSK_D - SCREW_CLEAR_D) / 2
     holes = [(bx, y) for bx in block_xs() for y in (FRONT_FLOOR + 6, wing_block_y())] + pillar_xys()
     for x, y in holes:
@@ -643,11 +658,11 @@ def summary():
 
 if __name__ == "__main__":
     hood, tray = make_hood(), make_tray()
-    for shape, name in ((hood, "hood"), (tray, "tray")):
+    for shape, name in ((hood, "hood"), (tray, "bottom_cover")):
         cq.exporters.export(cq.Workplane().add(shape), str(HERE / f"drum_case_{name}.step"))
     assy = (cq.Assembly(name="drum_case")
             .add(hood, name="hood", color=cq.Color(0.87, 0.82, 0.70))
-            .add(tray, name="tray", color=cq.Color(0.70, 0.66, 0.56)))
+            .add(tray, name="bottom_cover", color=cq.Color(0.70, 0.66, 0.56)))
     disp = display_model()
     if disp is not None:
         assy.add(disp, name="display_DisplayV2", color=cq.Color(0.1, 0.4, 0.2))

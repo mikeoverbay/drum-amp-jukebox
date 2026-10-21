@@ -16,8 +16,8 @@
 
 | Qty | Part | File |
 |---|---|---|
-| 1 | Hood | `cad/drum_case_hood.step`. Print deck-down, with supports for the slope, screen posts, front lip and side openings |
-| 1 | Tray | `cad/drum_case_tray.step`. Print bottom-down, no supports |
+| 1 | Hood | `cad/drum_case_hood.step`. Includes the back wall; print it standing on its back, with supports |
+| 1 | Bottom cover | `cad/drum_case_bottom_cover.step`. Print flat, no supports |
 
 ## Hardware
 
@@ -25,5 +25,5 @@
 |---|---|---|
 | 5 | M2.5 x 8 self-tapping screws | Screen board onto its posts |
 | 4 | 3 x 6 mm screws (no longer) | Uno onto its standoffs |
-| 6 | 3 x 14 mm countersunk wood screws | Tray into the hood: 2 front, 2 wing corners, 2 back pillars |
-| 4 | Rubber feet, up to Ø10 mm | Recesses under the tray |
+| 6 | 3 x 14 mm countersunk wood screws | Bottom cover into the hood: 2 front, 2 wing corners, 2 back corners |
+| 4 | Rubber feet, up to Ø10 mm | Recesses under the bottom cover |

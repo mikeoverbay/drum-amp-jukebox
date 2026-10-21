@@ -25,7 +25,7 @@ It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits i
 
 ## Getting it going
 
-1. **Print the case:** see [cad/README.md](cad/README.md). The hood prints deck-down and the tray bottom-down.
+1. **Print the case:** see [cad/README.md](cad/README.md). The hood prints standing on its back wall, and the bottom cover is a flat plate.
 2. **Flash the screen:**
    1. Copy `firmware/hw261_mp3_player/DWIN_SET/` to the root of a microSD card.
    2. With the screen powered off, insert the card and power it on. It shows blue, then orange when it's done.

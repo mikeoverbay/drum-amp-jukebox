@@ -1,4 +1,4 @@
-# Builds SONGIDX.TXT on the SD card for coffee_mp3_player_with_DWIN.ino.
+# Builds SONGIDX.TXT on the SD card for coffee_player.ino.
 # Record: 64 bytes = 8.3 short name padded to 12 + '|' + display name padded to 50 + LF.
 # Display name: from SONG_NAMES.txt (next to this script) if the song is listed there,
 # else "Artist - Title" from the MP3 tags, else the long filename.

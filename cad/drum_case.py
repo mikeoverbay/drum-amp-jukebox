@@ -1,14 +1,15 @@
-"""Console-style case for the drum-amp MP3 player, now on an Arduino Uno + shield stack.
+"""drum-amp-jukebox case: Arduino Uno + HW-261 VS1053 shield + Ender-3 V2 DWIN screen.
 
-Same look as the console case (vertical front lip, 30 degree screen face with the Ender-3 V2
-DWIN screen and knob built in, flat plain deck), but only as deep as the stack needs. The
-Uno hangs upside down under the deck on four D-shaped standoffs, exactly like the console;
-its USB, barrel jack and the shield's audio jack face the back, through an opening in the
-tray's back wall.
+Sloped console look (vertical front lip, 30 degree screen face with the DWIN screen and
+knob built in, plain flat deck). T-shaped from above: full width for the screen, then both
+sides step in to the board's length so its plugs show - the Uno's USB-B flush in the right
+step, the shield's jacks proud of a recess in the left step. The Uno hangs from the deck on
+long gusseted standoffs.
 
 Two printed parts:
-  hood - sides, front lip, screen face and deck in one piece, with the Uno standoffs.
-  tray - bottom + back wall in one piece, screwed up into the hood from below.
+  hood         - shell, screen face, deck and back wall in one piece, with the standoffs
+                 and the screw blocks; prints standing on its flat back.
+  bottom cover - flat T-shaped floor plate, screwed up into the hood from below.
 
 Coordinates (mm): X = width (knob side +X), Y = depth (front at 0), Z = up.
 Exported in assembled position.
@@ -19,9 +20,6 @@ import math
 from pathlib import Path
 
 import cadquery as cq
-from OCP.BRep import BRep_Tool
-from OCP.ShapeFix import ShapeFix_Wire
-from OCP.TopExp import TopExp
 
 HERE = Path(__file__).resolve().parent
 SHIELD_DIR = HERE / "vs1053_shield"     # HW-261 VS1053 shield model (from the 4560 cap session)
@@ -42,7 +40,7 @@ LCD_H = 5.2
 VA = (12.2, 109.9, 11.2, 67.7)
 ENC = (KNOB_X, 39.0)
 ENC_BODY, ENC_BODY_H = 12.0, 6.6
-ENC_SHAFT_D, ENC_SHAFT_TOP = 6.7, 21.21
+ENC_SHAFT_D = 6.7
 BACK_PARTS = [
     (15.2, 24.4, 20.0, 40.7, 9.6),       # 2x5 ribbon header
     (120.6, 129.8, 52.0, 61.2, 5.6),     # buzzer
@@ -65,7 +63,6 @@ STANDOFF_DROP = 25.0   # standoffs this much longer, so the board hangs lower in
 STANDOFF_H, STANDOFF_D, UNO_PILOT_D = 5.0 + STANDOFF_DROP, 9.0, 2.5
 STANDOFF_FLAT = 2.5    # D-shaped standoffs: flat this far from the hole, on the side facing the Uno's centre
 HANG_PILOT = 5.8       # pilot depth for 3 x 6 mm screws through the 1.6 mm Uno (as the console)
-MIN_SKIN = 1.0         # plastic required between a pilot and the outside of the hood
 # Stack: Uno + HW-261 VS1053 shield (vs1053_shield/vs1053_shield.py, +-1 mm from photos).
 UNO_FAR_PARTS = 66.0   # Uno parts (ICSP header) stop this far from the USB edge; the board is 68.58
 SHIELD_GAP, SHIELD_PCB_T, SHIELD_SOCKET_H = 11.0, 1.6, 8.5   # Uno PCB top to shield PCB; shield's tallest parts
@@ -78,8 +75,6 @@ SLOPE_CLEAR = 1.0      # Uno's back to the inside of the slope
 # the USB-B flush in the right step, the shield's headphone and mic jacks proud of the left.
 # Openings are snug; the narrow side walls flex to pop the board in.
 USB_B = (12.82, 12.5, 35.60)  # Uno USB-B body: width (along Y), height below the board, centre y (Uno STEP model)
-BARREL = (9.0, 6.5, 7.6, 10.0)   # Uno power jack: hole size, centre below the board, centre y, plug hole dia (+-1 mm)
-BARREL_HOLE = False         # power comes in by wire (mikeoverbay); True adds the power-jack hole
 OPEN_CLEAR = 0.3            # clearance round every connector and board edge in the walls
 USB_CLEAR = 1.5             # extra-roomy clearance round the USB-B body (mikeoverbay)
 USB_BOARD_T = 1.4           # the Uno model's board thickness, which the USB-B height is measured from
@@ -94,7 +89,7 @@ STEP_CLEAR = 9.5            # step walls' inner face to the screen's parts: room
 REAR_CLEAR = 22.0           # shield's back edge to the back wall (12, then 10 mm more for mikeoverbay)
 UNO_BACK_SHIFT = 9.0        # Uno moved this far back from the tightest fit (mikeoverbay)
 
-# All tray screws: 3 mm wood screws, 14 mm long (mikeoverbay).
+# All bottom-cover screws: 3 mm wood screws, 14 mm long (mikeoverbay).
 SCREW_L, SCREW_PILOT_D = 14.0, 2.5
 
 # ---------------------------------------------------------------------------
@@ -118,24 +113,11 @@ BOARD_PILOT_D = 2.1
 FLOOR_CLEAR = 2.0
 R_SIDE, R_RIDGE, R_LIP = 4.0, 6.0, 3.0
 R_BOTTOM = 2.0                           # bottom outside edges: the 3 mm walls leave room for 2 mm
-CSK_D, SCREW_CLEAR_D, PILOT_D = 6.3, 3.4, 2.5
+CSK_D, SCREW_CLEAR_D = 6.3, 3.4
 BLOCK = 10.0                             # bottom-cover screw block width
 PILOT_CHAMFER = 0.8                      # 45 degree lead-in on the screw pilots
 BLOCK_H = SCREW_L - 3.0 + 2.0            # height: the 14 mm screw goes 11 mm in, plus 2 mm of plastic
-VENT_SIDES = ()                          # no vent grooves: the narrow sides carry the plugs
-VENT_N, VENT_PITCH, VENT_W, VENT_DEPTH, VENT_TOP = 6, 3.5, 1.6, 1.0, 9.0
-DECK_SEAM = False                        # Apple II lid-seam groove on the deck (off: plain deck)
-SEAM_INSET, SEAM_W, SEAM_DEPTH = 9.0, 1.2, 0.8
-DECK_TEXT = ""
-DECK_TEXT_FONT = r"C:\Windows\Fonts\arialbd.ttf"
-DECK_TEXT_MAX = (120.0, 16.0)
-DECK_TEXT_DEPTH = 1.0
-DECK_TEXT_CHAMFER = 1.0                  # bottom band of the letters narrowing at 45 deg, so they print face down
-                                         # without support; = DECK_TEXT_DEPTH makes the ~2 mm strokes V-shaped
 FOOT_D, FOOT_DEPTH = 10.0, 1.0
-BACK_ON_HOOD = True                      # the back wall is part of the hood, so the hood can print standing on its
-                                         # back; the tray is then just the floor plate (mikeoverbay)
-HOOD_BACK_LIP = 0.0 if BACK_ON_HOOD else 3.0   # with the back on the tray: hood runs this far past it
 RIB_T, RIB_L = 3.0, 8.0                  # standoff gussets: thickness, reach along the deck (45 deg)
 
 # ---------------------------------------------------------------------------
@@ -303,7 +285,7 @@ def face_xy(bx, by):
 # Hood
 # ---------------------------------------------------------------------------
 def outer_solid():
-    prof = [(0, 0), (0, FRONT_H), (y_ridge, H), (D + HOOD_BACK_LIP, H), (D + HOOD_BACK_LIP, 0)]
+    prof = [(0, 0), (0, FRONT_H), (y_ridge, H), (D, H), (D, 0)]
     s = cq.Workplane("YZ").polyline(prof).close().extrude(W / 2, both=True).val()
     for pt, r in (((0, y_ridge, H), R_RIDGE), ((0, 0, FRONT_H), R_LIP)):
         e = min(s.Edges(), key=lambda e: (e.Center() - cq.Vector(*pt)).Length)
@@ -313,7 +295,7 @@ def outer_solid():
         if abs(f.normalAt().x) > 0.99:
             for e in f.Edges():
                 bb = e.BoundingBox()
-                if bb.zmax < 0.01 or bb.ymin > D + HOOD_BACK_LIP - 0.01:
+                if bb.zmax < 0.01 or bb.ymin > D - 0.01:
                     continue
                 side_edges.append(e)
     try:
@@ -334,7 +316,7 @@ def t_outer():
     full = outer_solid()
     ys = step_y()
     wings = full.intersect(box(-W, W, -1, ys, -1, H + 1))
-    narrow = full.intersect(box(XL, XR, ys - 1, D + HOOD_BACK_LIP + 1, -1, H + 1))
+    narrow = full.intersect(box(XL, XR, ys - 1, D + 1, -1, H + 1))
     solid = round_sharp_edges(wings.fuse(narrow).clean(), R_SIDE)
     bottom = [e for e in solid.Edges() if e.BoundingBox().zmax < 0.01]
     try:
@@ -392,14 +374,14 @@ def t_cavity():
     full = cavity()
     ys = step_y()
     return full.intersect(box(-W, W, -2, ys - WALL, -2, H)).fuse(
-        full.intersect(box(XL + WALL, XR - WALL, -2, (D - BACK_T) if BACK_ON_HOOD else (D + HOOD_BACK_LIP + 2), -2, H))).clean()
+        full.intersect(box(XL + WALL, XR - WALL, -2, D - BACK_T, -2, H))).clean()   # back wall stays
 
 
 def cavity():
     z_in = lambda y: FRONT_H + y * tanT - WALL / cosT
     y_ri = (H - WALL - FRONT_H + WALL / cosT) / tanT
-    prof = [(WALL, BOTTOM_T), (WALL, z_in(WALL)), (y_ri, H - WALL), (D + HOOD_BACK_LIP + 1, H - WALL),
-            (D + HOOD_BACK_LIP + 1, -1), (FRONT_FLOOR, -1), (FRONT_FLOOR, BOTTOM_T)]
+    prof = [(WALL, BOTTOM_T), (WALL, z_in(WALL)), (y_ri, H - WALL), (D + 1, H - WALL),
+            (D + 1, -1), (FRONT_FLOOR, -1), (FRONT_FLOOR, BOTTOM_T)]
     return cq.Workplane("YZ").polyline(prof).close().extrude(W / 2 - WALL, both=True).val()
 
 
@@ -421,79 +403,6 @@ def screen_features(hood):
         hood = hood.fuse(plane_cyl(P, bx, by, BOSS_D, boss_len + 0.01, start=WALL - 0.01))
         hood = hood.cut(plane_cyl(P, bx, by, BOARD_PILOT_D, boss_len + WALL - 1.5, start=1.5))
     return hood
-
-
-def deck_text_size():
-    """Font size that fits DECK_TEXT inside DECK_TEXT_MAX and the lid seam."""
-    probe = cq.Workplane("XY").text(DECK_TEXT, 10.0, 1.0, fontPath=DECK_TEXT_FONT).val().BoundingBox()
-    seam_d = D - y_ridge - 2 * (SEAM_INSET + SEAM_W) - 4
-    return 10.0 * min(DECK_TEXT_MAX[0] / probe.xlen, min(DECK_TEXT_MAX[1], seam_d) / probe.ylen)
-
-
-def _inset_wires(wire, d):
-    """2D offset of a wire (negative = inward). offset2D builds offset curves, which don't
-    survive a STEP round trip, so those edges are re-fitted as B-splines."""
-    def vpt(v):
-        p = BRep_Tool.Pnt_s(v)
-        return cq.Vector(p.X(), p.Y(), p.Z())
-
-    out = []
-    for w in wire.offset2D(d, "arc"):
-        edges = []
-        for e in w.Edges():
-            if e.geomType() == "OFFSET":
-                # End exactly on the original vertices so the neighbours still join up.
-                p0, p1 = vpt(TopExp.FirstVertex_s(e.wrapped)), vpt(TopExp.LastVertex_s(e.wrapped))
-                if (p1 - p0).Length < 1e-6:
-                    continue
-                if e.Length() < 0.01:
-                    e = cq.Edge.makeLine(p0, p1)
-                else:
-                    e = cq.Edge.makeSpline([p0] + [e.positionAt(i / 23) for i in range(1, 23)] + [p1])
-            edges.append(e)
-        nw = cq.Wire.assembleEdges(edges)
-        if not nw.IsClosed():
-            fix = ShapeFix_Wire(nw.wrapped, cq.Face.makeFromWires(w).wrapped, 1e-4)
-            fix.FixConnected()
-            fix.FixClosed()
-            nw = cq.Wire(fix.Wire())
-        out.append(nw)
-    return out
-
-
-def deck_text():
-    """DECK_TEXT as a solid for cutting into the deck, reading from the front. The bottom
-    DECK_TEXT_CHAMFER of each letter narrows at 45 degrees, built as 0.1 mm steps of inset
-    outlines (OCC's tapered extrude crashes on the font outlines)."""
-    y = (y_ridge + D) / 2                        # centre of the lid seam
-    letters = cq.Workplane("XY", origin=(0, y, 0)).text(
-        DECK_TEXT, deck_text_size(), 1.0, fontPath=DECK_TEXT_FONT, halign="center", valign="center").val()
-    z_band = H - DECK_TEXT_DEPTH + DECK_TEXT_CHAMFER      # top of the 45 degree band
-    n = max(1, round(DECK_TEXT_CHAMFER / 0.1))
-    step = DECK_TEXT_CHAMFER / n
-    cutters = []
-    for s in letters.Solids():
-        face = min(s.Faces(), key=lambda f: f.Center().z)
-        layers = [cq.Solid.extrudeLinear(face, cq.Vector(0, 0, H + 1 - z_band)).moved(cq.Location(cq.Vector(0, 0, z_band)))]
-        for k in range(n):
-            inset = (k + 0.5) * step
-            z0 = z_band - (k + 1) * step
-            try:
-                outs = _inset_wires(face.outerWire(), -inset)
-                holes = [w for iw in face.innerWires() for w in _inset_wires(iw, inset)]
-            except Exception:  # the stroke has closed up at this depth
-                continue
-            if not outs:
-                continue
-            ext = lambda w: cq.Solid.extrudeLinear(cq.Face.makeFromWires(w), cq.Vector(0, 0, step + 0.01)).moved(
-                cq.Location(cq.Vector(0, 0, z0)))
-            layer = ext(outs[0]).fuse(*[ext(w) for w in outs[1:]]) if len(outs) > 1 else ext(outs[0])
-            if holes:
-                layer = layer.cut(*[ext(w) for w in holes])
-            if layer.Volume() > 1e-6:
-                layers.append(layer)
-        cutters.append(layers[0].fuse(*layers[1:]).clean() if len(layers) > 1 else layers[0])
-    return cq.Compound.makeCompound(cutters)
 
 
 def block_xs():
@@ -518,14 +427,14 @@ def screw_pilot(x, y):
         cq.Solid.makeCone(SCREW_PILOT_D / 2 + c, SCREW_PILOT_D / 2, c + 0.01, cq.Vector(x, y, BOTTOM_T - 0.01)))
 
 
-def pillar_xys():
-    """Back tray screws: in the narrow back's two corners, BLOCK / 2 in from the side and back walls."""
+def back_screw_xys():
+    """Back bottom-cover screws: in the narrow back's two corners, BLOCK / 2 in from the side and back walls."""
     y = D - BACK_T - BLOCK / 2
     return [(XL + WALL + BLOCK / 2, y), (XR - WALL - BLOCK / 2, y)]
 
 
 def wing_block_y():
-    """Rear tray-screw blocks: in the wings, against the step walls."""
+    """Wing screw blocks: in the wings' back corners, against the step walls."""
     return step_y() - WALL - 6
 
 
@@ -546,8 +455,8 @@ def make_hood():
         hood = hood.fuse(wedge_block(bx, wy - 6, step_y() - WALL + 0.5).intersect(outer))
         hood = hood.cut(screw_pilot(bx, wy))
     # Bottom-cover screw blocks at floor level in the narrow back's corners, joined to the side
-    # and back walls, with 45 degree undersides (they replaced the full-height pillars).
-    for px, py in pillar_xys():
+    # and back walls, with 45 degree undersides.
+    for px, py in back_screw_xys():
         hood = hood.fuse(wedge_block(px, py - BLOCK / 2, py + BLOCK / 2 + 0.5).intersect(outer))
         hood = hood.cut(screw_pilot(px, py))
     # Uno standoffs hanging from the deck, clipped to the outer shell.
@@ -558,15 +467,11 @@ def make_hood():
         hood = hood.cut(pl)
     c = OPEN_CLEAR
     utop = uno_back_z - 1.6                       # Uno component side (faces down)
-    # Right step: USB-B opening (body flush with the outside) and the power-jack hole.
+    # Right step: USB-B opening, the body flush with the outside. Power comes in by wire.
     uw, uh, uyc = USB_B
     _, uy = uno_xy(0, uyc)
     uc, ut = USB_CLEAR, uno_back_z - USB_BOARD_T
     hood = hood.cut(box(XR - WALL - 1, XR + 1, uy - uw / 2 - uc, uy + uw / 2 + uc, ut - uh - uc, ut + uc))
-    _, bz, byc, bd = BARREL
-    _, by = uno_xy(0, byc)
-    if BARREL_HOLE:
-        hood = hood.cut(cq.Solid.makeCylinder(bd / 2, WALL + 2, cq.Vector(XR - WALL - 1, by, utop - bz), cq.Vector(1, 0, 0)))
     # Left step: jack barrels through, plus shallow pockets in its inside face for the Uno's
     # board edge, the shield's board edge and the jack bodies, which reach a little into it.
     m = _shield_module()
@@ -592,43 +497,31 @@ def make_hood():
     if uno_usb_x - 67.77 - c < xin:
         hood = hood.cut(box(uno_usb_x - 67.77 - c, xin + 0.01, uno_y0 + 8.22 - 1.0 - c, uno_y0 + 38.53 + 1.0 + c,   # + the 45 deg corners
                         shield_bot - SHIELD_PCB_T - c, shield_bot + c))
-    # Apple II side vent grooves (flat bottom, 45 degree top).
-    y0, y1 = y_ridge + 6, D - 6
-    for i in range(VENT_N):
-        zb, zt = H - VENT_TOP - i * VENT_PITCH - VENT_W / 2, H - VENT_TOP - i * VENT_PITCH + VENT_W / 2
-        for sx in VENT_SIDES:
-            surf, back = sx * W / 2, sx * (W / 2 - VENT_DEPTH)
-            prof = [(surf + sx, zb), (back, zb), (back, zt - VENT_DEPTH), (surf + sx, zt + 1)]
-            hood = hood.cut(cq.Workplane("XZ", origin=(0, y0, 0)).polyline(prof).close().extrude(-(y1 - y0)).val())
-    if DECK_TEXT:
-        hood = hood.cut(deck_text())
     return hood.clean()
 
 
 # ---------------------------------------------------------------------------
-# Tray (bottom + back)
+# Bottom cover
 # ---------------------------------------------------------------------------
-def make_tray():
-    """Bottom + back wall, T-shaped like the hood: full width under the screen, narrow behind."""
+def make_bottom_cover():
+    """Flat floor plate, T-shaped like the hood: full width under the screen, narrow behind,
+    stopping inside the back wall."""
     xi = W / 2 - WALL - 0.3
     ys = step_y()
     nl, nr = XL + WALL + 0.3, XR - WALL - 0.3
-    tray = box(-xi, xi, FRONT_FLOOR + 0.3, ys - WALL - 0.3, 0, BOTTOM_T)
-    tray = tray.fuse(box(nl, nr, ys - WALL - 1, D, 0, BOTTOM_T))
-    if BACK_ON_HOOD:
-        tray = tray.cut(box(nl - 1, nr + 1, D - BACK_T - 0.3, D + 1, -1, BOTTOM_T + 1))   # floor stops inside the back wall
-    else:
-        tray = tray.fuse(box(nl, nr, D - BACK_T, D, 0, H - WALL - 0.3))
+    cover = box(-xi, xi, FRONT_FLOOR + 0.3, ys - WALL - 0.3, 0, BOTTOM_T)
+    cover = cover.fuse(box(nl, nr, ys - WALL - 1, D, 0, BOTTOM_T))
+    cover = cover.cut(box(nl - 1, nr + 1, D - BACK_T - 0.3, D + 1, -1, BOTTOM_T + 1))   # stops inside the back wall
     csk_h = (CSK_D - SCREW_CLEAR_D) / 2
-    holes = [(bx, y) for bx in block_xs() for y in (FRONT_FLOOR + 6, wing_block_y())] + pillar_xys()
+    holes = [(bx, y) for bx in block_xs() for y in (FRONT_FLOOR + 6, wing_block_y())] + back_screw_xys()
     for x, y in holes:
-        tray = tray.cut(cq.Solid.makeCylinder(SCREW_CLEAR_D / 2, BOTTOM_T + 2, cq.Vector(x, y, -1)))
-        tray = tray.cut(cq.Solid.makeCone(CSK_D / 2 + 0.5, SCREW_CLEAR_D / 2, csk_h + 0.5, cq.Vector(x, y, -0.5)))
+        cover = cover.cut(cq.Solid.makeCylinder(SCREW_CLEAR_D / 2, BOTTOM_T + 2, cq.Vector(x, y, -1)))
+        cover = cover.cut(cq.Solid.makeCone(CSK_D / 2 + 0.5, SCREW_CLEAR_D / 2, csk_h + 0.5, cq.Vector(x, y, -0.5)))
     feet = [(sx * (W / 2 - WALL - 24), FRONT_FLOOR + 16) for sx in (-1, 1)] + \
            [(sx * (min(-nl, nr) - 9), D - BACK_T - 24) for sx in (-1, 1)]
     for x, y in feet:
-        tray = tray.cut(cq.Solid.makeCylinder(FOOT_D / 2, FOOT_DEPTH + 1, cq.Vector(x, y, -1)))
-    return tray.clean()
+        cover = cover.cut(cq.Solid.makeCylinder(FOOT_D / 2, FOOT_DEPTH + 1, cq.Vector(x, y, -1)))
+    return cover.clean()
 
 
 def uno_model():
@@ -646,7 +539,7 @@ def display_model():
 
 def summary():
     return {
-        "outer W x D x H (mm)": f"{W:.1f} x {D + HOOD_BACK_LIP:.1f} x {H:.1f}",
+        "outer W x D x H (mm)": f"{W:.1f} x {D:.1f} x {H:.1f}",
         "narrow back X (mm)": f"{XL:.2f} to {XR:.2f} ({XR - XL:.1f} wide), from Y {step_y():.1f}",
         "headphone jack front X, centre Y, Z": "%.1f, %.1f, %.1f" % jack_case_xyz(),
         "deck depth (mm)": f"{D - y_ridge:.1f}",
@@ -657,12 +550,12 @@ def summary():
 
 
 if __name__ == "__main__":
-    hood, tray = make_hood(), make_tray()
-    for shape, name in ((hood, "hood"), (tray, "bottom_cover")):
+    hood, cover = make_hood(), make_bottom_cover()
+    for shape, name in ((hood, "hood"), (cover, "bottom_cover")):
         cq.exporters.export(cq.Workplane().add(shape), str(HERE / f"drum_case_{name}.step"))
     assy = (cq.Assembly(name="drum_case")
             .add(hood, name="hood", color=cq.Color(0.87, 0.82, 0.70))
-            .add(tray, name="bottom_cover", color=cq.Color(0.70, 0.66, 0.56)))
+            .add(cover, name="bottom_cover", color=cq.Color(0.70, 0.66, 0.56)))
     disp = display_model()
     if disp is not None:
         assy.add(disp, name="display_DisplayV2", color=cq.Color(0.1, 0.4, 0.2))

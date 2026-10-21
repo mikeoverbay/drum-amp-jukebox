@@ -8,7 +8,7 @@
 // VLSI patches now load from PATCHES.BIN on the SD card (saves ~9 KB of flash).
 // VS1053bPatches.h is kept only as the source of that file.
 //
-// HW-261 copy of coffee_mp3_player_with_DWIN: the red "VS1053 MP3 Shield" on an Uno,
+// HW-261 copy of coffee_player: the red "VS1053 MP3 Shield" on an Uno,
 // same card (SONGIDX.TXT, PATCHES.BIN).
 // With the DWIN screen (hasScreen = true): exactly the coffee player, display on D0/D1.
 // Without it (hasScreen = false): it starts playing by itself, the knob is turn = volume,
@@ -113,7 +113,7 @@ const uint16_t LEFT_RIGHT = 289; // Last pixel column of the left area.
 // Menu buttons and reel frames are one library, 9.ICO on the display, in place of
 // Creality's stock icons (the bank the stock firmware uses, known to work).
 // Icons: 0-18 and 31-32 coffee player buttons (unused here), 19-30 reels, 33-63 this
-// player's smaller buttons and Tone popup (hw261_mp3_player\tone_art\make_tone_art.py).
+// player's smaller buttons and Tone popup (drum_player\tone_art\make_tone_art.py).
 const uint8_t CD_LIB = 9;
 const uint8_t CD_FIRST_ICON = 19;
 const uint8_t CD_FRAMES = 12;

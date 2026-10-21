@@ -18,7 +18,7 @@ It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits i
 
 | Folder | What's in it |
 |---|---|
-| [`firmware/hw261_mp3_player/`](firmware/hw261_mp3_player/) | The Arduino sketch, plus the screen's flash set (`DWIN_SET/`) and the button art source (`tone_art/`) |
+| [`firmware/drum_player/`](firmware/drum_player/) | The Arduino sketch, plus the screen's flash set (`DWIN_SET/`) and the button art source (`tone_art/`) |
 | [`cad/`](cad/) | The printed case: CadQuery source, STEP files, the shield model and the reference models. See [cad/README.md](cad/README.md) |
 | [`sd-card/`](sd-card/) | Tools to build the music card: `MakeSongIndex.ps1`, the `SONG_NAMES.txt` title list, and `PATCHES.BIN` (VLSI VS1053b patches) |
 | [`docs/`](docs/) | [Parts list](docs/parts-list.md) and [wiring](docs/wiring.md) |
@@ -27,7 +27,7 @@ It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits i
 
 1. **Print the case:** see [cad/README.md](cad/README.md). The hood prints standing on its back wall, and the bottom cover is a flat plate.
 2. **Flash the screen:**
-   1. Copy `firmware/hw261_mp3_player/DWIN_SET/` to the root of a microSD card.
+   1. Copy `firmware/drum_player/DWIN_SET/` to the root of a microSD card.
    2. With the screen powered off, insert the card and power it on. It shows blue, then orange when it's done.
    3. Take the card out.
    - Keep the screen's `9.ICO` under about 215 KB, or the screen drops the later icons.
@@ -38,11 +38,11 @@ It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits i
    ```
 
    This writes `SONGIDX.TXT`. The titles come from `SONG_NAMES.txt` first, then the MP3 tags.
-4. **Upload the sketch:** open `firmware/hw261_mp3_player/hw261_mp3_player.ino` in the Arduino IDE. You need the Adafruit VS1053 and SD libraries; the board is Arduino Uno. **Unplug the screen's D0/D1 wires while uploading.**
+4. **Upload the sketch:** open `firmware/drum_player/drum_player.ino` in the Arduino IDE. You need the Adafruit VS1053 and SD libraries; the board is Arduino Uno. **Unplug the screen's D0/D1 wires while uploading.**
 5. **Wire it up:** see [docs/wiring.md](docs/wiring.md).
 
 ## Status
 
 - The case is designed but not printed yet. Check how far the narrow side walls flex when you pop the board in.
 - The firmware runs on the hardware: the menu, Tone popup and playback all work.
-- The firmware here is a **copy** of `Documents\Arduino\hw261_mp3_player`, taken 2026-10-21. The drum session still works in the original, so copy its changes in when they land.
+- The firmware here is a **copy** of `Documents\Arduino\drum_player`, taken 2026-10-21. The drum session still works in the original, so copy its changes in when they land.

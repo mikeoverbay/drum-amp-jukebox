@@ -39,13 +39,13 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 - **Right step:**
   - The USB-B gets a roomy 15.8 x 15.5 mm opening, 1.5 mm round the body (`USB_CLEAR`), and its face is flush with the outside.
   - The USB-B's size and position come from your Uno STEP model: 12.82 wide x 12.5 tall above the board, centred 35.6 mm from the power edge, sticking out 6.86 mm past the board.
-  - No hole for the power jack: power comes in by wire. `BARREL_HOLE = True` adds a Ø10 hole for it.
+  - No hole for the power jack: power comes in by wire.
 - **Left step:** moved 1.5 mm out (`LEFT_WIDEN`) so the board ends don't run into it. The Uno's board end clears its inside face by 0.5 mm, the shield's by 1.2 mm.
   - On the outside, a 1.5 mm deep recess with rounded ends wraps both jacks. The jacks stand 0.5 mm proud of its floor, through a 1.5 mm wall.
   - Ø8.8 holes for the two 5.8 mm jack barrels: 1.5 mm all round (`JACK_CLEAR`). That leaves a 1.9 mm web between them.
 - **Fitting the board:** the USB and the jack barrels stick through the narrow walls, 3.0 mm on the right and 2.0 mm on the left. **Flex the narrow walls out and pop the board in.**
 - **Rounded edges:** every outside edge is rounded: R4 on the corners, the steps and the deck edges, plus the R6 ridge and R3 lip. The bottom edges are R2, because the 3 mm walls only have room for that. Where the steps' rounded inside corners meet the deck, two shallow 13° creases are left.
-- **Back wall:** part of the hood (`BACK_ON_HOOD`), so the hood can print standing on its flat back. `BACK_ON_HOOD = False` puts it back on the bottom cover, with a 3 mm lip on the hood.
+- **Back wall:** part of the hood, so the hood can print standing on its flat back.
 - **Bottom cover:** a floor plate, T-shaped like the hood, sitting inside its walls. It's held by 6 **3 x 14 mm wood screws** from below, countersunk.
   - Every screw block's pilot has a 0.8 mm 45° lead-in chamfer where the screw enters.
   - The blocks on the side walls are wedges, tallest at the wall, with 45° undersides sloping back to it (`wedge_block`). They print without support and keep at least 1 mm of plastic over the pilot.
@@ -53,10 +53,9 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
   - 2 into blocks behind the front lip;
   - 2 into blocks in the back corners of the wide part, against the step walls;
   - 2 into blocks in the narrow back's corners.
-- **Back corner blocks:** two 10 mm wedge blocks at floor level in the narrow back's corners, joined to the side and back walls. Their screws are 8 mm in from the outside of both walls. They replaced the full-height pillars.
+- **Back corner blocks:** two 10 mm wedge blocks at floor level in the narrow back's corners, joined to the side and back walls. Their screws are 8 mm in from the outside of both walls.
 - **Room behind the board:** 22 mm from the shield's back edge to the back wall (`REAR_CLEAR`).
 - **microSD:** the card goes in from the USB end, but the socket's mouth is 14 mm inside the right step. **Take the bottom cover off to swap the card**; the shield faces down, so it's right there.
-- **No vents:** the narrow sides carry the plugs.
 
 ## Assembly order
 

@@ -6,7 +6,7 @@
 |---|---|---|
 | 1 | Arduino Uno R3 | Hangs upside down under the case deck |
 | 1 | HW-261 "VS1053 MP3 Shield" (red) | Stacks on the Uno. Its headphone and mic jacks come out the case's left side |
-| 1 | Ender-3 V2 display (DWIN DMT48270C043_04WNZ11) with its knob and cable | Flashed with `firmware/hw261_mp3_player/DWIN_SET` |
+| 1 | Ender-3 V2 display (DWIN DMT48270C043_04WNZ11) with its knob and cable | Flashed with `firmware/drum_player/DWIN_SET` |
 | 1 | microSD card for the music | FAT32. Goes in the shield |
 | 1 | microSD card for flashing the screen | Any small FAT32 card; only needed to flash it |
 | 1 | Regulated 5 V supply, 1 A or more | Wired in; the power jack isn't brought out of the case |

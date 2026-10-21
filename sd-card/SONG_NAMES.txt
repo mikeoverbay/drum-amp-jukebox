@@ -1,0 +1,278 @@
+# Proposed display names, "Artist: Song". Max 50 characters (index limit).
+# Format: SHORTNAME|Artist: Song|note
+# Notes: FIXED = artist or title was wrong. CHECK = listen to confirm. DUP? = may be the same song as another file.
+HARRYN~2.MP3|Harry Nilsson: Jump into the Fire|
+38SPEC~2.MP3|38 Special: Hold On Loosely|
+10000M~2.MP3|10,000 Maniacs: These Are Days|
+10000M~3.MP3|10,000 Maniacs: Trouble Me|
+10000M~1.MP3|10,000 Maniacs: Because the Night|
+38SPEC~1.MP3|Bad Company: Good Lovin' Gone Bad|FIXED artist (not 38 Special)
+ACEOFB~1.MP3|Ace of Base: The Sign|FIXED title (not "I Saw the Sign")
+ALANPA~2.MP3|The Alan Parsons Project: Don't Answer Me|
+ALANPA~4.MP3|The Alan Parsons Project: I Robot|
+AL12E0~1.MP3|Alan Parsons: I Wouldn't Want to Be Like You|Artist shortened to fit 50
+AL7F9D~1.MP3|The Alan Parsons Project: The Raven|
+AL805F~1.MP3|Alan Parsons Project: Where Do We Go from Here|
+ALICEC~1.MP3|Alice Cooper: Billion Dollar Babies|
+ALICEC~2.MP3|Alice Cooper: No More Mr. Nice Guy|
+ALICEC~3.MP3|Alice Cooper: Only Women Bleed|
+ALICEC~4.MP3|Alice Cooper: Poison|
+AL596C~1.MP3|Alice Cooper: School's Out|FIXED title
+THEBAN~1.MP3|Belinda Carlisle: Heaven Is a Place on Earth|FIXED artist (file said The Bangles)
+BILLYI~1.MP3|Billy Idol: Cradle of Love|
+BILLYI~2.MP3|Billy Idol: Dancing with Myself|
+BILLYI~3.MP3|Billy Idol: Eyes Without a Face|
+BILLYI~4.MP3|Billy Idol: Flesh for Fantasy|
+BI2473~1.MP3|Billy Idol: Rebel Yell|
+BIFF8F~1.MP3|Billy Idol: White Wedding|
+BILLYS~2.MP3|Billy Squier: Everybody Wants You|
+BILLYS~3.MP3|Billy Squier: Lonely Is the Night|
+BILLYS~4.MP3|Billy Squier: Rock Me Tonite|FIXED title spelling
+BILLYS~1.MP3|Billy Squier: The Stroke|FIXED artist spelling
+BLONDI~1.MP3|Blondie: Rapture|
+BLUEOY~1.MP3|Blue Oyster Cult: (Don't Fear) The Reaper|
+BLUEOY~2.MP3|Blue Oyster Cult: Godzilla|
+BOBMAR~2.MP3|Bob Marley & The Wailers: Buffalo Soldier|
+BOBMAR~1.MP3|Bobby McFerrin: Don't Worry, Be Happy|FIXED artist (not Bob Marley); tag was garbled
+BOBMAR~3.MP3|Bob Marley & The Wailers: I Shot the Sheriff|
+BOBSEG~4.MP3|Bob Seger: Still the Same|FIXED artist spelling
+BOBSEG~1.MP3|Bob Seger: Against the Wind|
+BOBSEG~2.MP3|Bob Seger: Her Strut|
+BOBSEG~3.MP3|Bob Seger: Night Moves|
+BOFA63~1.MP3|Bob Seger: We've Got Tonight|
+BOSTON~1.MP3|Boston: Amanda|
+BRYANA~1.MP3|Bryan Adams: (Everything I Do) I Do It for You|
+BRYANA~2.MP3|Bryan Adams: Run to You|
+BRYANA~3.MP3|Bryan Adams: Summer of '69|
+CATSTE~1.MP3|Cat Stevens: Moonshadow|
+CATSTE~2.MP3|Cat Stevens: Wild World|
+CELINE~2.MP3|Celine Dion: My Heart Will Go On|
+CELINE~1.MP3|Celine Dion: You and I|
+IFICOU~1.MP3|Cher: If I Could Turn Back Time|
+CYNDIL~1.MP3|Cyndi Lauper: She Bop|FIXED artist spelling
+CINDYL~2.MP3|Cyndi Lauper: True Colors|FIXED artist spelling
+CINDYL~1.MP3|Cyndi Lauper: Girls Just Want to Have Fun|CHECK: tag says Starship - No Way Out
+CLASH-~1.MP3|The Clash: Rock the Casbah|
+THECLA~1.MP3|The Clash: London Calling|
+COLDPL~2.MP3|Coldplay: Clocks|
+COLDPL~1.MP3|Coldplay: Fix You|
+COLDPL~3.MP3|Coldplay: Yellow|
+COLLEC~1.MP3|Collective Soul: Shine|
+THECRA~2.MP3|The Cranberries: Linger|
+CREED-~1.MP3|Creed: My Sacrifice|
+DAVEMA~1.MP3|Dave Matthews Band: Crush|
+DAVEMA~2.MP3|Dave Matthews Band: Fool to Think|
+DAVEMA~3.MP3|Dave Matthews Band: The Space Between|FIXED title
+DAVIDB~1.MP3|David Bowie: Fame|
+DAVIDB~2.MP3|David Bowie: Golden Years|
+DAVIDB~3.MP3|David Bowie: Let's Dance|
+DADDFC~1.MP3|David Bowie: Modern Love|
+DA132C~1.MP3|David Bowie: Rebel Rebel|
+DAVIDB~4.MP3|David Bowie: Space Oddity|CHECK: file says "Major Tom" (could be Peter Schilling)
+DAAFA1~1.MP3|David Bowie: Young Americans|
+DA97B7~1.MP3|Queen & David Bowie: Under Pressure|
+DAVIDL~1.MP3|David Lee Roth: Just a Gigolo|
+DEFLEP~1.MP3|Def Leppard: Foolin'|FIXED artist spelling
+DEFLEP~4.MP3|Def Leppard: Rock of Ages|FIXED artist spelling
+DE81E4~1.MP3|Autograph: Turn Up the Radio|FIXED artist (not Def Leppard); CHECK by ear
+DEFLEP~2.MP3|Def Leppard: Photograph|
+DEFLEP~3.MP3|Def Leppard: Pyromania|CHECK: Pyromania is the album; which song is it?
+RONNIE~2.MP3|Dio: Rainbow in the Dark|
+DIREST~1.MP3|Dire Straits: Money for Nothing|FIXED artist spelling
+DIREST~2.MP3|Dire Straits: So Far Away|
+DIREST~3.MP3|Dire Straits: Walk of Life|
+DURAND~4.MP3|Duran Duran: White Lines|
+DURAND~2.MP3|Duran Duran: Hungry Like the Wolf|FIXED (tag was "Mindaphaseone - Track 7")
+DURAND~3.MP3|Duran Duran: The Reflex|FIXED (tag was "Track 2")
+DURAND~1.MP3|Duran Duran: Girls on Film|FIXED (tag was "Track 8")
+EURYTH~1.MP3|Eurythmics: Here Comes the Rain Again|
+EURYTH~2.MP3|Eurythmics: Sweet Dreams (Are Made of This)|
+EURYTH~3.MP3|Eurythmics: Would I Lie to You?|
+EURYTH~4.MP3|Annie Lennox: Why|FIXED artist (Annie Lennox solo)
+FINEYO~1.MP3|Fine Young Cannibals: She Drives Me Crazy|
+FOOFIG~1.MP3|Foo Fighters: Generator|
+FOOFIG~2.MP3|Foo Fighters: Learn to Fly|
+FOOFIG~3.MP3|Foo Fighters: Times Like These|
+GARYWR~1.MP3|Gary Wright: Dream Weaver|
+GENESI~1.MP3|Genesis: Mama|
+GENESI~2.MP3|Genesis: That's All|
+PHILCO~1.MP3|Genesis: Invisible Touch|FIXED artist
+PHILCO~3.MP3|Genesis: I Can't Dance|FIXED artist
+PHILCO~2.MP3|Genesis: Follow You Follow Me|FIXED artist
+GINBLO~1.MP3|Gin Blossoms: Follow You Down|FIXED artist spelling
+GINBLO~2.MP3|Gin Blossoms: Hey Jealousy|FIXED artist spelling
+GOLDEN~1.MP3|Golden Earring: Radar Love|FIXED artist spelling
+GOLDEN~2.MP3|Golden Earring: When the Bullet Hits the Bone|
+GREEND~2.MP3|Green Day: Good Riddance (Time of Your Life)|FIXED title
+GREEND~1.MP3|Green Day: Good Riddance (Time of Your Life)|DUP? "Something unpredictable" is its first line
+GREGKI~1.MP3|Greg Kihn Band: Jeopardy|
+GREGKI~2.MP3|Greg Kihn Band: The Breakup Song|
+HARRYC~1.MP3|Harry Chapin: Cat's in the Cradle|
+HARRYC~2.MP3|Dave Loggins: Please Come to Boston|FIXED artist (not Harry Chapin)
+HARRYC~3.MP3|Harry Chapin: Taxi|
+HARRYN~3.MP3|Harry Nilsson: Me and My Arrow|
+HARRYN~1.MP3|Harry Nilsson: Everybody's Talkin'|FIXED title (Midnight Cowboy theme)
+HUEYLE~1.MP3|Huey Lewis & the News: Back in Time|
+HUEYLE~2.MP3|Huey Lewis & the News: Do You Believe in Love|
+HUEYLE~3.MP3|Huey Lewis & the News: Heart and Soul|
+HUEYLE~4.MP3|Huey Lewis & the News: The Heart of Rock & Roll|
+HUF4E4~1.MP3|Huey Lewis & the News: Hip to Be Square|
+HU6814~1.MP3|Huey Lewis & the News: I Want a New Drug|
+HU03C5~1.MP3|Huey Lewis & the News: If This Is It|
+HUA422~1.MP3|Huey Lewis & the News: The Power of Love|
+HU89F8~1.MP3|Huey Lewis & the News: Working for a Livin'|FIXED title
+INXS-B~1.MP3|INXS: Beautiful Girl|
+INXS-N~1.MP3|INXS: Never Tear Us Apart|
+INXS-N~2.MP3|INXS: New Sensation|
+INXS-S~1.MP3|INXS: Suicide Blonde|
+ITSABE~1.MP3|It's a Beautiful Day: Girl with No Eyes|
+ITSABE~2.MP3|It's a Beautiful Day: Hot Summer Day|
+ITSABE~3.MP3|It's a Beautiful Day: White Bird|
+JGEILS~1.MP3|The J. Geils Band: Centerfold|
+JGEILS~2.MP3|The J. Geils Band: Freeze-Frame|
+JGEILS~3.MP3|The J. Geils Band: Love Stinks|
+08JIMM~1.MP3|Jimmy Buffett: Changes in Latitudes, Changes in..|Full title too long for 50
+01JIMM~1.MP3|Jimmy Buffett: Cheeseburger in Paradise|
+07JIMM~1.MP3|Jimmy Buffett: Come Monday|
+04JIMM~1.MP3|Jimmy Buffett: Son of a Son of a Sailor|
+13JIMM~1.MP3|Jimmy Buffett: Volcano|
+JOANJE~1.MP3|Joan Jett: Bad Reputation|
+JOANJE~2.MP3|Joan Jett: I Hate Myself for Loving You|
+JOANJE~3.MP3|Joan Jett: I Love Rock 'n' Roll|
+JOECOC~1.MP3|Joe Cocker: Mustang Sally|CHECK: known versions are Mack Rice / Wilson Pickett
+JOECOC~2.MP3|Joe Cocker: You Are So Beautiful|
+JOECOC~3.MP3|Joe Cocker: You Can Leave Your Hat On|
+JOHNCO~1.MP3|John Cougar Mellencamp: Small Town|
+JOHNFO~1.MP3|John Fogerty: Centerfield|
+JOHNFO~2.MP3|John Fogerty: The Old Man Down the Road|
+JOHNWA~1.MP3|Paul Young: Every Time You Go Away|FIXED artist (not John Waite)
+JOHNWA~2.MP3|John Waite: Missing You|FIXED title
+JOURNE~1.MP3|Journey: Don't Stop Believin'|FIXED title ("midnight train" is a lyric)
+JOURNE~2.MP3|Journey: Open Arms|
+JOURNE~3.MP3|Journey: Don't Stop Believin'|DUP? "small town girl" is also a lyric of it
+JOURNE~4.MP3|Steve Perry: Oh Sherrie|FIXED artist (Steve Perry solo)
+KIMCAR~1.MP3|Kim Carnes: Bette Davis Eyes|
+LITAFO~1.MP3|Lita Ford: Black Widow|CHECK: not found in search
+LITAFO~2.MP3|Lita Ford: It Ain't No Big Thing|CHECK: not found in search
+LITAFO~3.MP3|Lita Ford: Only Women Bleed|
+LIVING~1.MP3|Living Colour: Cult of Personality|
+LOSLOB~1.MP3|Los Lobos: La Bamba|
+LOSLON~1.MP3|Los Lonely Boys: Heaven|FIXED title ("How far is heaven" is a lyric)
+LOVERB~1.MP3|Loverboy: Lovin' Every Minute of It|
+LOVERB~2.MP3|Loverboy: The Kid Is Hot Tonite|
+LOVERB~3.MP3|Loverboy: Turn Me Loose|
+LOVERB~4.MP3|Loverboy: Working for the Weekend|
+MADONN~1.MP3|Madonna: Into the Groove|
+MADONN~2.MP3|Madonna: Like a Virgin|
+MADONN~3.MP3|Madonna: Vogue|
+MADONN~4.MP3|Madonna: Lucky Star|
+10DOWN~1.MP3|Men at Work: Down by the Sea|
+MIKEAN~1.MP3|Mike + The Mechanics: All I Need Is a Miracle|
+MIKEAN~2.MP3|Mike + The Mechanics: Silent Running|
+NODOUB~1.MP3|No Doubt: Don't Speak|
+NODOUT~1.MP3|No Doubt: Just a Girl|
+NODOUB~2.MP3|No Doubt: Spiderwebs|
+PHILLC~1.MP3|Phil Collins: Against All Odds|FIXED title ("Take a Look at Me Now" is a lyric)
+PHILLC~2.MP3|Phil Collins: True Colors|
+POISON~1.MP3|Poison: Every Rose Has Its Thorn|
+POISON~2.MP3|Poison: Nothin' but a Good Time|
+POISON~3.MP3|Warrant: Cherry Pie|FIXED artist (not Poison)
+PRETEN~1.MP3|Pretenders: Back on the Chain Gang|
+THEPRE~1.MP3|Pretenders: I'll Stand by You|
+THEPRE~2.MP3|Pretenders: Brass in Pocket|
+PUDDLE~1.MP3|Puddle of Mudd: Blurry|
+QUARTE~1.MP3|Quarterflash: Find Another Fool|
+QUARTE~2.MP3|Quarterflash: Harden My Heart|
+QUIETR~1.MP3|Quiet Riot: Cum On Feel the Noize|
+QUIETR~3.MP3|Twisted Sister: We're Not Gonna Take It|FIXED artist (not Quiet Riot)
+QUIETR~2.MP3|Twisted Sister: I Wanna Rock|FIXED artist (not Quiet Riot)
+RONNIE~1.MP3|Rainbow: Man on the Silver Mountain|
+RATT-R~1.MP3|Ratt: Round and Round|
+80S-RO~1.MP3|Robert Palmer: Addicted to Love|
+ROMANT~1.MP3|The Romantics: What I Like About You|
+SAMMYH~1.MP3|Sammy Hagar: Heavy Metal|
+SAMMYH~2.MP3|Sammy Hagar: I Can't Drive 55|
+SAMMYH~3.MP3|Sammy Hagar: There's Only One Way to Rock|
+SANTAN~1.MP3|Santana: Black Magic Woman|
+SANTAN~2.MP3|Santana ft. Rob Thomas: Smooth|
+SCANDA~1.MP3|Scandal: Goodbye to You|
+HAUNTED1.MP3|Scary Halloween sounds|
+STARGATE.MP3|Stargate|CHECK: what is this file?
+12STEV~1.MP3|Steve Miller Band: Dance, Dance, Dance|
+09STEV~1.MP3|Steve Miller Band: Fly Like an Eagle|
+11STEV~1.MP3|Steve Miller Band: Jet Airliner|
+02STEV~1.MP3|Steve Miller Band: Jungle Love|
+04STEV~1.MP3|Steve Miller Band: Rock'n Me|
+05STEV~1.MP3|Steve Miller Band: Serenade|
+01STEV~2.MP3|Steve Miller Band: Swingtown|
+03STEV~1.MP3|Steve Miller Band: Take the Money and Run|
+08STEV~1.MP3|Steve Miller Band: The Joker|
+07STEV~1.MP3|Steve Miller Band: The Stake|
+10STEV~1.MP3|Steve Miller Band: Threshold|
+06STEV~1.MP3|Steve Miller Band: True Fine Love|
+14STEV~1.MP3|Steve Miller Band: Wild Mountain Honey|
+13STEV~1.MP3|Steve Miller Band: Winter Time|
+01STEV~1.MP3|Stevie Ray Vaughan: Love Struck Baby|
+07STEV~2.MP3|Stevie Ray Vaughan: Mary Had a Little Lamb|
+02STEV~2.MP3|Stevie Ray Vaughan: Pride and Joy|
+STINGA~1.MP3|The Police: Don't Stand So Close to Me|
+STINGA~2.MP3|The Police: Every Breath You Take|
+ST779D~1.MP3|The Police: Every Breath You Take|DUP? "I'll be watching you" is its lyric
+STINGA~3.MP3|The Police: Every Little Thing She Does Is Magic|
+STINGA~4.MP3|The Police: King of Pain|
+ST68E3~1.MP3|The Police: Message in a Bottle|
+ST4919~1.MP3|The Police: Message in a Bottle|DUP? "Sending out an SOS" is its lyric
+ST172F~1.MP3|The Police: Roxanne|
+THEPOL~1.MP3|The Police: De Do Do Do, De Da Da Da|
+STYX-L~1.MP3|Styx: Lady|
+TEARSF~1.MP3|Tears for Fears: Change|
+TEARSF~2.MP3|Tears for Fears: Everybody Wants to Rule the World|
+TEARSF~3.MP3|Tears for Fears: God's Mistake|
+TEXAS-~1.MP3|Texas: I Don't Want a Lover|
+ALANPA~1.MP3|The Alan Parsons Project: Breakdown|
+ALANPA~3.MP3|The Alan Parsons Project: Eye in the Sky|FIXED title ("I can read your mind" is a lyric)
+01WALK~1.MP3|The Bangles: Walk Like an Egyptian|
+07BYEB~1.MP3|The Cars: Bye Bye Love|
+01GOOD~1.MP3|The Cars: Good Times Roll|
+10HEAR~1.MP3|The Cars: Heartbeat City|
+01HELL~1.MP3|The Cars: Hello Again|
+07ITSN~1.MP3|The Cars: It's Not the Night|
+03JUST~1.MP3|The Cars: Just What I Needed|
+03MAGI~1.MP3|The Cars: Magic|
+08MOVI~1.MP3|The Cars: Moving in Stereo|
+02MYBE~1.MP3|The Cars: My Best Friend's Girl|
+06YOUM~1.MP3|The Cars: You Might Think|
+06YOUR~1.MP3|The Cars: You're All I've Got Tonight|
+THECOR~1.MP3|The Corrs: Breathless|
+THECRA~1.MP3|The Cranberries: Dreams|
+THECRA~3.MP3|The Cranberries: Zombie|
+THEPRO~1.MP3|The Proclaimers: I'm Gonna Be (500 Miles)|FIXED title
+TOMPET~1.MP3|Tom Petty: American Girl|
+TOMPET~2.MP3|Tom Petty: Breakdown|
+TOMPET~3.MP3|Tom Petty: Don't Come Around Here No More|
+TOMPET~4.MP3|Tom Petty: Don't Do Me Like That|
+TOD435~1.MP3|Tom Petty: Free Fallin'|
+TOA35E~1.MP3|Tom Petty: I Won't Back Down|
+TO6332~1.MP3|Tom Petty: Mary Jane's Last Dance|FIXED title
+TO1D15~1.MP3|Tom Petty: Refugee|
+TO8F4F~1.MP3|Tom Petty: Roll Another Joint|CHECK: not a Tom Petty title I can confirm
+TO1FE5~1.MP3|Tom Petty: Runnin' Down a Dream|
+TO1488~1.MP3|Tom Petty: The Waiting|FIXED title
+TOMMYT~1.MP3|Tommy Tutone: 867-5309/Jenny|
+VANHAL~1.MP3|Van Halen: Higher|CHECK: no Van Halen song by this name (Creed has "Higher")
+VANHAL~2.MP3|Van Halen: Hot for Teacher|
+VANHAL~3.MP3|Van Halen: Ice Cream Man|
+VANHAL~4.MP3|Van Halen: Panama|
+VA2318~1.MP3|Van Halen: (Oh) Pretty Woman|
+VAA90A~1.MP3|Van Halen: Runnin' with the Devil|
+WAR-LO~1.MP3|War: Low Rider|
+ZZTOP-~1.MP3|ZZ Top: Beer Drinkers & Hell Raisers|
+ZZTOP-~2.MP3|ZZ Top: Cheap Sunglasses|
+ZZTOP-~3.MP3|ZZ Top: Gimme All Your Lovin'|
+ZZTOP-~4.MP3|ZZ Top: Got Me Under Pressure|
+ZZ422E~1.MP3|ZZ Top: La Grange|
+ZZFCD5~1.MP3|ZZ Top: Legs|
+ZZCEAB~1.MP3|ZZ Top: Pearl Necklace|
+ZZBCF3~1.MP3|ZZ Top: Sharp Dressed Man|
+ZZ453D~1.MP3|ZZ Top: Tube Snake Boogie|
+ZZ7CE1~1.MP3|ZZ Top: Tush|

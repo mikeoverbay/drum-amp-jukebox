@@ -1,0 +1,7 @@
+# CAD exports are big and generated: store them as-is and don't diff them.
+*.step binary
+*.STEP binary
+*.ICO binary
+*.BIN binary
+*.jpg binary
+*.png binary

@@ -12,7 +12,9 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 - Overall: 169.1 W x 173.9 D x 66.0 H mm.
 - Narrow back: 78.8 mm wide, from 93.8 mm back.
 
-![back](drumcase_tshape_back.svg)
+![front](drumcase_front.png)
+
+![back](drumcase_back.png)
 
 ## Files
 
@@ -24,7 +26,8 @@ From the front it looks like the console case: a vertical front lip, a 30° scre
 | `drum_case.py` | Parametric CadQuery source. Run `python drum_case.py` |
 | `vs1053_shield/` | The shield model (made by the 4560 cap session, ±1 mm from photos) |
 | `reference/` | The models the script fits against: the Ender-3 V2 display (`DisplayV2.step`) and your Uno (`arduino_uno_r3.step`) |
-| `drumcase_tshape*.svg` | Views of the hood |
+| `drumcase_*.png` | Shaded views: front, back, underneath, and the hood with the bottom cover. Run `python render_views.py` after `drum_case.py` to redo them |
+| `drumcase_tshape*.svg` | Line drawings of the hood |
 
 ## Design
 

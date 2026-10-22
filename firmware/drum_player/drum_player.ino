@@ -374,7 +374,9 @@ void updateProgress() {
 // Rotary encoder on the display board, common to GND:
 // A -> A0 (PC0), B -> A1 (PC1), push (ENT) -> A2 (PC2).
 const uint8_t ENCODER_STEPS_PER_DETENT = 4;
-const bool ENCODER_REVERSED = false; // Flip if turning right goes backwards.
+const bool ENCODER_REVERSED = true; // Flip if turning right goes backwards in the menu.
+// Numbers (volume, bass, treble) count the other way from the menu highlight.
+const int8_t VALUE_DIRECTION = -1;
 volatile int8_t encoderSteps = 0;
 volatile uint8_t encoderLast = 0;
 
@@ -673,7 +675,7 @@ void menuUpdate() {
   menuTouched = millis();
   if (!displayOn()) { // No screen: turn = volume, press = next song (or resume when paused).
     if (turn) {
-      setVolumeLevel(constrain(int16_t(volumeLevel) + turn, 0, VOLUME_MAX));
+      setVolumeLevel(constrain(int16_t(volumeLevel) + turn * VALUE_DIRECTION, 0, VOLUME_MAX));
       dbg(F("Volume "));
       dbgln(volumeLevel);
     }
@@ -729,7 +731,7 @@ void menuUpdate() {
       }
       break;
     case MENU_VOLUME:
-      if (turn) setVolumeLevel(constrain(int16_t(volumeLevel) + turn, 0, VOLUME_MAX));
+      if (turn) setVolumeLevel(constrain(int16_t(volumeLevel) + turn * VALUE_DIRECTION, 0, VOLUME_MAX));
       if (press) menuState = MENU_MAIN;
       drawItem(ITEM_VOLUME);
       dwinRefresh();
@@ -742,8 +744,8 @@ void menuUpdate() {
         return;
       }
       if (press) toneEditing = !toneEditing;
-      if (turn && toneEditing && toneRow == TONE_BASS) setTone(bassLevel + turn, trebleLevel);
-      if (turn && toneEditing && toneRow == TONE_TREBLE) setTone(bassLevel, trebleLevel + turn);
+      if (turn && toneEditing && toneRow == TONE_BASS) setTone(bassLevel + turn * VALUE_DIRECTION, trebleLevel);
+      if (turn && toneEditing && toneRow == TONE_TREBLE) setTone(bassLevel, trebleLevel + turn * VALUE_DIRECTION);
       if (turn && !toneEditing) {
         uint8_t old = toneRow;
         toneRow = (toneRow + turn % TONE_ROWS + TONE_ROWS) % TONE_ROWS;
@@ -918,6 +920,37 @@ void initializeRandom() {
   dbgln(F("New random seed saved in EEPROM."));
 }
 
+// Shuffle without repeats: one bit per song in EEPROM marks it played, so every song
+// plays once before any plays again, across power-offs too. When all have played the
+// table starts over. A different song count (new card) clears it.
+const int PLAYED_EEPROM = 944;      // Bits for songs 0-511 at 944-1007.
+const uint16_t PLAYED_MAX = 512;    // Songs past this are never marked (always "new").
+const int PLAYED_INFO = 1008;       // Marker at 1008, song count at 1009-1010.
+
+bool isPlayed(uint16_t song) {
+  return song < PLAYED_MAX && (EEPROM.read(PLAYED_EEPROM + song / 8) & (1 << (song % 8)));
+}
+
+void markPlayed(uint16_t song) {
+  if (song >= PLAYED_MAX) return;
+  int at = PLAYED_EEPROM + song / 8;
+  EEPROM.update(at, EEPROM.read(at) | (1 << (song % 8)));
+}
+
+void clearPlayed() {
+  for (uint8_t i = 0; i < PLAYED_MAX / 8; i++) EEPROM.update(PLAYED_EEPROM + i, 0);
+  EEPROM.update(PLAYED_INFO, SETTING_MARKER);
+  EEPROM.put(PLAYED_INFO + 1, songCount);
+  dbgln(F("Played list cleared."));
+}
+
+// After countSongs(): keep the table only if it was made for this many songs.
+void loadPlayed() {
+  uint16_t savedCount;
+  EEPROM.get(PLAYED_INFO + 1, savedCount);
+  if (EEPROM.read(PLAYED_INFO) != SETTING_MARKER || savedCount != songCount) clearPlayed();
+}
+
 void countSongs() {
   songIndex = SD.open(SONG_INDEX); // Stays open for the life of the sketch.
   File &list = songIndex;
@@ -1031,6 +1064,7 @@ bool trySong(uint16_t selected) {
   if (!goingBack && lastSong >= 0 && lastSong != int32_t(selected)) rememberSong(lastSong);
   goingBack = false;
   lastSong = selected;
+  markPlayed(selected); // Picked or shuffled, it doesn't come round again this cycle.
   return true;
 }
 
@@ -1063,18 +1097,30 @@ void startNextSong() {
     }
     return;
   }
-  uint16_t selected;
-  if (songCount > 1 && lastSong >= 0) {
-    selected = random(long(songCount - 1));
-    if (selected >= lastSong) selected++;
-  } else selected = random(long(songCount));
-
-  // Try random choice first. If absent/invalid, try the following records.
-  // Bounded retries avoid getting stuck on missing files in the song list.
+  // A random song not played yet this cycle (and not the one just played).
+  uint16_t fresh = 0;
+  for (uint16_t s = 0; s < songCount; s++) {
+    if (int32_t(s) != lastSong && !isPlayed(s)) fresh++;
+  }
+  if (!fresh) { // Everything has played: start a new cycle.
+    clearPlayed();
+    if (lastSong >= 0) markPlayed(lastSong);
+    fresh = songCount > 1 && lastSong >= 0 ? songCount - 1 : songCount;
+  }
+  uint16_t skip = random(long(fresh));
+  for (uint16_t s = 0; s < songCount; s++) {
+    player.feedBuffer();
+    if (int32_t(s) == lastSong || isPlayed(s)) continue;
+    if (skip--) continue;
+    if (trySong(s)) return;
+    markPlayed(s); // Missing file: don't pick it again this cycle.
+  }
+  // Rare: the chosen one failed. Take the next playable song in order.
+  uint16_t selected = lastSong >= 0 ? lastSong : 0;
   for (uint32_t attempt = 0; attempt < songCount; attempt++) {
-    if (selected != lastSong && trySong(selected)) return;
     selected++;
-    if (selected == songCount) selected = 0;
+    if (selected >= songCount) selected = 0;
+    if (selected != lastSong && trySong(selected)) return;
   }
   // If only the last song is playable, repeat it rather than stop playback.
   if (lastSong >= 0 && trySong(uint16_t(lastSong))) return;
@@ -1146,6 +1192,7 @@ void setup() {
   }
   if (!cardOk) halt(F("ERROR: SD card not found."));
   countSongs();
+  loadPlayed();
   initializeRandom();
   loadSettings(); // Mono, before the patches apply it.
 

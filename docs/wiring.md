@@ -42,7 +42,11 @@ There's no reset pin. The firmware starts the VS1053 first, then the SD card.
 
 ## Audio
 
-- The shield's **headphone jack** (3.5 mm stereo) goes to the Donner DDA-80 through a 3.5 mm to 1/4" cable.
+- **Line out to the 1/4" jack** on the back wall (USB side), mono, then a 1/4" cable to the Donner DDA-80:
+  - left line-out: the pad of the 220 uF cap **C2** that faces the headphone jack -> **1 kOhm** (in heat-shrink) -> 1/4" jack **tip**;
+  - ground: the headphone jack's sleeve pad -> 1/4" jack **sleeve**.
+  - The headphone jack still works; this only taps it. Or skip the 1/4" jack and run a 3.5 mm to 1/4" cable from the headphone opening.
 - **Mono** can be switched in the menu (Mono/Stereo). It's saved in EEPROM.
 - **Bass and treble** are in the menu's Tone popup (bass 0-15 dB below 100 Hz, treble -8 to +7 steps of 1.5 dB above 3 kHz). They're saved in EEPROM when you press Done.
-- **Caution:** on VS1053 boards the headphone jack's sleeve may be **GBUF** (about 1.25 V), not ground. Don't wire the jack sleeve to the Arduino's ground. Use a cable straight to the amp.
+- On the Music Maker the line out goes through 220 uF output caps, so its sleeve is real ground (unlike the dropped HW-261, whose sleeve was GBUF).
+- **Never wire the speaker terminals to the 1/4" jack:** the 3 W amp is bridged (BTL), neither terminal is ground, and grounding one shorts the amp.

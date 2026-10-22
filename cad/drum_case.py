@@ -1,4 +1,4 @@
-"""Parametric sloped console case for the coffee player: Ender-3 V2 DWIN display + Arduino Uno
+"""Parametric sloped console case for the drum player (was the coffee player case): Ender-3 V2 DWIN display + Arduino Uno
 with an Adafruit Music Maker.
 
 Style: classic sloped console (vertical front lip, 30 degree screen face, flat rear deck)
@@ -31,7 +31,10 @@ def _first(*paths):
 
 DISPLAY_STEP = _first(HERE / "reference" / "DisplayV2.step", HERE.parent / "ender 3 v2 models" / "DisplayV2.step")
 UNO_STEP = _first(HERE / "reference" / "arduino_uno_r3.step", HERE.parent.parent / "STEP files" / "ARDUINO UNO R3 Step.STEP")   # mikeoverbay's Uno model: visuals only, its holes are wrong
-STL_DIR = _first(HERE / "generated", HERE.parent / "coffee player STLs")   # printable STLs are written here too, if the folder exists
+# Everything this script makes goes in generated/, so it never overwrites mikeoverbay's
+# hand-edited hood (Shapr3D) next to it, which is the one to print.
+OUT_DIR = HERE / "generated"
+STL_DIR = OUT_DIR
 # (In the repo, cad/stl holds mikeoverbay's Shapr3D-edited STLs, so the script must not write there.)
 UNO_MODEL_XY = (33.04, 27.26)   # add to the model's x, y to get Uno coordinates (matched on its 4 holes)
 
@@ -72,8 +75,9 @@ RIBBON_PLUG = 8.0                        # ribbon plug + cable bend beyond the h
 # ---------------------------------------------------------------------------
 UNO_L, UNO_W = 68.58, 53.34
 # x from the USB edge, y from the power-header edge. The hole beside the power jack is from
-# mikeoverbay's Uno STEP model, caliper-checked on the real board (Arduino's drawing has it at 13.97, 2.54).
-UNO_HOLES = [(15.24, 3.71), (15.24, 50.80), (66.04, 7.62), (66.04, 35.56)]
+# Arduino's official UNO R3 holes (UNO-TH_Rev3e.brd, docs.arduino.cc/hardware/uno-rev3).
+# mikeoverbay's Uno STEP model has the first one wrong at (15.24, 3.71).
+UNO_HOLES = [(13.97, 2.54), (15.24, 50.80), (66.04, 7.62), (66.04, 35.56)]
 UNO_PCB_T = 1.6
 UNO_USB_OVERHANG = 6.35
 # Plugs on the stack's back edge that get a hole in the back wall: (u from the power-header
@@ -82,13 +86,22 @@ UNO_USB_OVERHANG = 6.35
 # stack: 3.22 mm left and 0.95 mm down, seen from the back, then 0.68 mm back right so the USB
 # socket's left side is 84.04 mm from the hood's inside left wall (caliper). The holes leave
 # room for the plug bodies, since the wall is 3.5 mm out from the sockets.
+# USB-B socket: 11.8 wide centred 38.10 from the power-header edge (Arduino's UNO R3 file,
+# confirmed by caliper: 9.33 vs 9.34 from the far edge), about 11.0 tall on the Uno's board.
+# Headphone jack nose: 5.0 dia, axis 26.16 from the power-header edge (Adafruit's board file,
+# music_maker_shield.py) and MM_GAP + 1.6 board + 2.5 axis (typical) = 15.4 above the Uno.
+USB_SOCKET = (38.10, 5.5, 11.8, 11.0)    # u, h above the Uno's component side (centre), w, h
+HEADPHONE_NOSE = (26.16, 15.4, 5.0)      # u, h, diameter
+USB_GROW = 1.5        # the USB hole is the socket plus this all round (mikeoverbay)
+HEADPHONE_GROW = 3.0  # the headphone hole is the jack nose plus this on the diameter, for the plug
 BACK_PLUGS = {
-    "Uno USB": (35.16, 6.15, 15.0, 14.4),           # USB-B socket 12 x ~10.5; 14.4 tall per mikeoverbay
-    "Music Maker headphone": (23.96, 16.95, 9.0, 0.0),  # 3.5 mm jack
+    "Uno USB": (USB_SOCKET[0], USB_SOCKET[1], USB_SOCKET[2] + 2 * USB_GROW, USB_SOCKET[3] + 2 * USB_GROW),
+    "Music Maker headphone": (HEADPHONE_NOSE[0], HEADPHONE_NOSE[1], HEADPHONE_NOSE[2] + HEADPHONE_GROW, 0.0),
 }
 # Two 1/4" (6.35 mm) panel jacks on the back wall, either side of the plug holes.
 JACK_D = 9.8               # Switchcraft-style open-frame jack: 3/8"-32 bushing (9.53) + print allowance
-JACK_XS = (-50.0, 50.0)    # centres across the back
+JACK_XS = (-50.0,)         # centre across the back: the USB side, so the audio wires from the
+                           # Music Maker's jack don't cross the boards (mikeoverbay)
 JACK_Z = 30.0              # centre height
 JACK_BODY = (20.0, 20.0, 35.0)   # keep-out behind the wall for an open-frame jack: w, h, depth
 HOLE_CHAMFER = 0.8         # 45 degree chamfer on the outside edge of every back wall hole (mikeoverbay)
@@ -113,6 +126,8 @@ TILT = 30.0            # screen face angle up from the desk
 WALL = 3.0             # also the screen face thickness
 BOTTOM_T = 3.0         # bottom cover and hood front floor strip
 BACK_T = 3.0           # back wall
+ELEPHANT_FOOT = 0.6    # 45 degree chamfer round the back face's outside edge: the hood prints
+                       # standing on its back, and this hides the first layer's squish
 FRONT_FLOOR = 15.0     # hood floor strip behind the front lip
 FRONT_H_MIN = 15.0     # front lip height (raised automatically if the ribbon plug needs it)
 D_MIN = 120.0          # depth (raised automatically to fit the Uno stack behind the display)
@@ -376,6 +391,11 @@ def screw_pilot(x, y):
         cq.Solid.makeCone(PILOT_D / 2 + c, PILOT_D / 2, c + 0.01, cq.Vector(x, y, BOTTOM_T - 0.01)))
 
 
+def uno_to_wall(u, h_up):
+    """Uno-side position (u from the power-header edge, h above its component side) -> back wall X, Z."""
+    return UNO_X - (u - UNO_W / 2), uno_back_z - UNO_PCB_T - h_up
+
+
 def back_wall_holes():
     """Plug holes and 1/4\" jack holes through the back wall, each with a HOLE_CHAMFER 45 degree
     chamfer on its outside edge. The inside face stays flat for the jack frames."""
@@ -458,7 +478,11 @@ def make_hood():
             groove = (cq.Workplane("XZ", origin=(0, y0, 0)).polyline(prof).close()
                       .extrude(-(y1 - y0)).val())
             hood = hood.cut(groove)
-    return hood.clean()
+    hood = hood.clean()
+    # Elephant's foot: chamfer the outline of the face the hood prints on (the back).
+    # The plug holes in it already have their own chamfers.
+    rim = cq.Workplane().add(hood).faces(">Y").val().outerWire().Edges()
+    return hood.chamfer(ELEPHANT_FOOT, None, rim).clean()
 
 
 # ---------------------------------------------------------------------------
@@ -500,6 +524,19 @@ def uno_model():
     return cq.importers.importStep(str(UNO_STEP)).val().moved(cq.Location(t))
 
 
+def music_maker_model():
+    """The Music Maker (amp version) from music_maker_shield.py, plugged on the hanging Uno:
+    turned over and mirrored like the Uno, its board MM_GAP below the Uno's component side.
+    None if music_maker_shield.py isn't next to this file."""
+    try:
+        import music_maker_shield as mm
+    except ImportError:
+        return None
+    t = gp_Trsf()
+    t.SetValues(0, -1, 0, UNO_X + UNO_W / 2, -1, 0, 0, uno_edge, 0, 0, -1, uno_back_z - UNO_PCB_T - MM_GAP)
+    return mm, mm.shield_solid().moved(cq.Location(t))
+
+
 def music_maker_envelope():
     """Placeholder for the Music Maker (no model): its board and parts, over the Uno's footprint."""
     x0, y0 = uno_xy(UNO_L, 0)
@@ -536,13 +573,14 @@ def summary():
 
 
 if __name__ == "__main__":
+    OUT_DIR.mkdir(exist_ok=True)
     hood, cover = make_hood(), make_bottom_cover()
     for shape, name in ((hood, "hood"), (cover, "bottom_cover")):
-        cq.exporters.export(cq.Workplane().add(shape), str(HERE / f"console_{name}.step"))
+        cq.exporters.export(cq.Workplane().add(shape), str(OUT_DIR / f"drum_case_{name}.step"))
         if STL_DIR.is_dir():
-            cq.exporters.export(cq.Workplane().add(shape), str(STL_DIR / f"{name}.stl"),
+            cq.exporters.export(cq.Workplane().add(shape), str(STL_DIR / f"drum_case_{name}.stl"),
                                 tolerance=0.01, angularTolerance=0.1)
-    assy = (cq.Assembly(name="console")
+    assy = (cq.Assembly(name="drum_case")
             .add(hood, name="hood", color=cq.Color(0.87, 0.82, 0.70))
             .add(cover, name="bottom_cover", color=cq.Color(0.70, 0.66, 0.56)))
     disp = display_model()
@@ -551,11 +589,24 @@ if __name__ == "__main__":
     uno = uno_model()
     if uno is not None:
         assy.add(uno, name="arduino_uno", color=cq.Color(0.1, 0.35, 0.6))
-        assy.add(music_maker_envelope(), name="music_maker_envelope", color=cq.Color(0.2, 0.4, 0.8, 0.4))
+        mm_model = music_maker_model()
+        if mm_model is not None:
+            mm, shield = mm_model
+            assy.add(shield, name="music_maker_amp", color=cq.Color(0.10, 0.25, 0.65))
+            # How the real jack lines up with the back wall's headphone hole, and any clash.
+            jx = UNO_X - (mm.JACK_Y - UNO_W / 2)
+            jz = uno_back_z - UNO_PCB_T - MM_GAP - (mm.PCB_T + mm.JACK_AXIS_Z)
+            ox, oz = uno_to_wall(*HEADPHONE_NOSE[:2])
+            print(f"{'Music Maker jack axis X, Z (mm)':30} {jx:.1f}, {jz:.1f}  "
+                  f"(headphone hole centre {ox:.1f}, {oz:.1f}: off by {jx - ox:+.1f}, {jz - oz:+.1f})")
+            clash = shield.intersect(hood).Volume()
+            print(f"{'Music Maker vs hood overlap':30} {clash:.2f} mm3")
+        else:
+            assy.add(music_maker_envelope(), name="music_maker_envelope", color=cq.Color(0.2, 0.4, 0.8, 0.4))
     else:
         assy.add(stack_envelope(), name="uno_stack_envelope", color=cq.Color(0.2, 0.4, 0.8, 0.4))
     for i, jb in enumerate(jack_bodies()):
         assy.add(jb, name=f"jack_body_{i + 1}", color=cq.Color(0.3, 0.3, 0.3, 0.5))
-    assy.export(str(HERE / "console_assembly.step"))
+    assy.export(str(OUT_DIR / "drum_case_assembly.step"))
     for k, v in summary().items():
         print(f"{k:30s} {v}")

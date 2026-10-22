@@ -1,10 +1,11 @@
 # drum-amp-jukebox case: Ender-3 V2 display + Arduino Uno + Music Maker
 
-> **The case to print is mikeoverbay's Shapr3D edit:** `stl/hood.stl`, `stl/bottom_cover.stl` and `case_assembly.step`, exported 2026-10-22. He trimmed the inside corners of some Uno standoffs to clear the sockets' solder pins.
-> `console_case.py` is the parametric source of the base design, which the 4560 cap session keeps in `Desktop\mini-4560\coffee player STEPs`. It doesn't have his trims yet, and it writes to `generated/` so it can't overwrite them.
->
-> **Known issue in this version:** the Uno screw hole by the power jack is at (15.24, 3.71), taken from the wrong Uno model. Arduino's official position is 1.7 mm away, at (13.97, 2.54). Three screws line up. For the fourth, drill a 2.5 mm pilot through the Uno's hole into the same standoff, or use the corrected version when it lands.
-> **Uno holes:** use Arduino's official UNO R3 positions, (13.97, 2.54), (15.24, 50.80), (66.04, 7.62) and (66.04, 35.56) mm, not the `reference/arduino_uno_r3.step` model, which is wrong. The STEP model is for looks only.
+> **The case to print:** `stl/drum_case_hood.stl` and `stl/drum_case_bottom_cover.stl` (STEP: `drum_case_hood.step`, `drum_case_bottom_cover.step`).
+> **The hood is mikeoverbay's Shapr3D edit (2026-10-22)** of the script's design. He changed the back wall:
+>   - one opening for the Uno's USB-B and the Music Maker's headphone jack together;
+>   - a single 1/4" jack hole on the USB side (X = -50 from behind), so the audio wires from the Music Maker's jack don't cross the boards.
+> `drum_case.py` is the parametric base design. It writes only to `generated/` (git-ignored), so it can't overwrite his hood. Its back wall has separate USB and headphone holes.
+> **Uno holes:** Arduino's official UNO R3 positions, (13.97, 2.54), (15.24, 50.80), (66.04, 7.62) and (66.04, 35.56) mm. The `reference/arduino_uno_r3.step` model is for looks only.
 
 This is a 3D-printable sloped console in the style of a classic electronics enclosure, with Apple II touches. It holds:
 - the Ender-3 V2 DWIN screen, landscape, with the knob on the right and the screen tilted 30° up from the desk;
@@ -18,13 +19,13 @@ This is a 3D-printable sloped console in the style of a classic electronics encl
 
 | File | What it is |
 |---|---|
-| `console_hood.step` | Hood: sides, front lip, sloped screen face, top deck and back wall in one piece. The screen and the Uno stack both mount on it |
-| `console_bottom_cover.step` | The bottom cover: a 3 mm plate held by 4 screws from below. It comes off without disturbing any wiring |
-| `console_assembly.step` | Both parts assembled, plus the display model (`DisplayV2.step`), your Uno model (`reference/arduino_uno_r3.step`, for looks only) hanging on its standoffs, and placeholder boxes for the Music Maker and the jack bodies |
-| `console_case.py` | Parametric CadQuery source. Run `python console_case.py` to regenerate |
+| `drum_case_hood.step` | Hood (mikeoverbay's Shapr3D edit): sides, front lip, sloped screen face, top deck and back wall in one piece. The screen and the Uno stack both mount on it |
+| `drum_case_bottom_cover.step` | The bottom cover: a 3 mm plate held by 4 screws from below. It comes off without disturbing any wiring |
+| `drum_case.py` | Parametric CadQuery source of the base design. `python drum_case.py` writes STEPs, STLs and an assembly (with the Music Maker model) to `generated/` |
+| `music_maker_shield.py` | Adafruit Music Maker amp shield (1788) model from Adafruit's board file; writes `reference/adafruit_music_maker_amp.step` |
 | `previews/` | Renders and section views |
 
-The matching STLs for printing are in `..\coffee player STLs\`.
+The STLs for printing are in `stl/`.
 
 Parts are exported in their assembled position:
 - X is width, centred.
@@ -36,7 +37,7 @@ Parts are exported in their assembled position:
 - 15 mm vertical front lip, a 102 mm slope at 30°, and a 79 mm flat deck.
 - **The Uno stack hangs upside down under the deck**, so it and the screen are both on the hood, which makes wiring easier.
   - It hangs on four 9 mm D-shaped standoffs **20 mm long**. Their ends, where the Uno screws on, are **40 mm above the inside of the floor**; `UNO_FLOOR_H` sets that, and the standoff length follows from it. The 24 mm stack ends 16 mm above the floor.
-  - **Mounting holes:** the hole beside the power jack comes from your Uno STEP model: 15.24 mm from the USB end, 3.71 mm from the power-header edge. You confirmed it with calipers on your board. Arduino's drawing has it at 13.97, 2.54. The other three agree in both.
+  - **Mounting holes:** Arduino's official UNO R3 positions (UNO-TH_Rev3e.brd from docs.arduino.cc): (13.97, 2.54), (15.24, 50.80), (66.04, 7.62), (66.04, 35.56) mm. The Uno STEP model has the first one wrong at (15.24, 3.71).
   - The standoffs are in the Uno R3 hole pattern. Each flat sits 2.5 mm from its hole, facing the Uno's centre. 
   - **Gussets:** each standoff has four 3 mm ribs up to the deck (or to the slope, for the front pair), with 45° undersides. They cover the top 12 mm of each standoff, ending 8 mm above the Uno's board, and stay at least 3.9 mm from the screen's parts. They stop the standoffs snapping or pulling out. `RIB_T`, `RIB_REACH` and `RIB_CLEAR` set them.
   - The standoffs have 2.5 mm pilot holes, 5.8 mm deep from the free end, for **3 x 6 mm** wood screws: 4.4 mm of thread in the plastic after the 1.6 mm board. Above the pilot, each standoff is solid up to the deck, with at least 8.4 mm of plastic to the outside. `HANG_PILOT` sets the depth.
@@ -102,16 +103,15 @@ The back wall is part of the hood, and the **bottom cover** is a 3 mm plate that
   - two into the blocks in the back corners, 5 mm in from the side and back walls.
   - Each screw goes 11 mm into its block. That leaves at least 3 mm of plastic above the pilot at the back and 4.4 mm at the front, and 3 mm to the outside.
 - **Plug holes** in the hood's back wall, where the stack's plugs are, scaled from your photo of the stack, then moved 3.22 mm left and 0.95 mm down after you checked them against the real stack, and 0.68 mm back right to match your 84.04 mm USB measurement (`BACK_PLUGS`). Seen from the back, with the console sitting flat:
-  - **Uno USB:** 15 x 14.4 mm, centred 8.5 mm right of centre and 35.25 mm up. The socket's left side is 84.04 mm from the hood's inside left wall, as you measured.
-  - **Music Maker headphone jack:** Ø9 mm, centred 2.7 mm left of centre and 24.45 mm up. There's 1.3 mm of plastic between it and the USB hole.
+  - **Uno USB** (script version): the socket (11.8 x 11.0, centred 38.10 mm from the power-header edge, Arduino's UNO R3 file, caliper-checked) plus 1.5 mm all round.
+  - **Music Maker headphone jack** (script version): Ø8 mm (the 5 mm jack nose plus 3), on the jack axis from Adafruit's board file. mikeoverbay's hood joins it with the USB hole into one opening.
   - Both are bigger than the sockets so the plug bodies fit: the wall is 3.5 mm out from the USB socket and about 10 mm from the headphone jack.
   - The Uno's power jack, the microSD card and the screw terminals have no hole; take the bottom cover off to reach them.
 - **Chamfers:** every back wall hole has a 0.8 mm 45° chamfer on its outside edge (`HOLE_CHAMFER`).
   - The inside face stays flat for the 1/4" jack frames. Outside, the jack nut's washer covers the chamfer and still sits flat.
-  - The USB and headphone chamfers meet in the outer 0.16 mm of the 1.3 mm strip between those two holes. Below that the strip is whole.
-- **Two 1/4" jack holes, Ø9.8 mm**, in the hood's back wall, for Switchcraft-style open-frame mono jacks.
+- **One 1/4" jack hole, Ø9.8 mm**, in the hood's back wall, for a Switchcraft-style open-frame mono jack.
   - Their 3/8"-32 bushing is 9.53 mm; the extra allows for printed holes coming out small.
-  - They sit at X = ±50 mm, 30 mm up, either side of the plug holes.
+  - It sits at X = -50 mm (the USB side), 30 mm up.
   - The jack bodies are 19 mm across and 30 mm long. They clear the stack by 13 mm and the back-corner screw blocks by 11 mm.
 - **Feet:** recesses under the bottom cover, Ø10 x 1 mm.
 
@@ -160,10 +160,10 @@ The STEP files are in the upright orientation, as the case sits.
 | Display | 5 x M2.5 x 8 self-tapping screws |
 | Uno | 4 x 3 x 6 mm wood screws up into the hanging standoffs (no longer than 6 mm) |
 | Bottom cover | 4 x 3 x 14 mm countersunk wood screws |
-| Jacks | 2 x Switchcraft-style 1/4" mono open-frame jacks |
+| Jack | 1 x Switchcraft-style 1/4" mono open-frame jack, plus 1 x 1 kOhm 1/4 W resistor and heat-shrink |
 | Feet | 4 rubber feet, up to Ø10 mm |
 
-## Settings to adjust (top of `console_case.py`)
+## Settings to adjust (top of `drum_case.py`)
 
 - **Display holes:** `BOARD_HOLES`. The corner holes' distance from the board edges is assumed: the measured spacing, centred where the CAD model puts the pattern.
 - **Stack height:** `STACK_BODY_H`, from the Uno's underside to the top of the Music Maker's screw terminals (24 mm, from your photo). Add about 12.5 mm per extra shield.
@@ -177,10 +177,11 @@ The STEP files are in the upright orientation, as the case sits.
 
 - **Stack:** the Uno against the standoffs, with the Music Maker plugged straight on below it (no proto shield, as in your photo). Its headphone jack lines up with the back wall's round hole.
 - **Power:** the only way in now is the USB hole, so the stack runs on USB power. That's fine for line out to the drum amp. The Music Maker's own amp at volume plus the display backlight would be too much for USB. For a separate regulated 5 V (2–3 A) supply, a power hole is needed: ask 4560 cap.
-- **Audio out:** the board is the Music Maker **without** the amp. Its line out (the tip) feeds the Donner DDA-80's 1/4" input. Mono is a runtime setting in the sketch (`setMono()`), using the VLSI patches.
-  - **Caution (from the Arduino session):** on this board the jack's sleeve is **GBUF (1.25 V), not ground**.
-  - So **don't wire the 1/4" jack sleeves to the Arduino ground** unless the Arduino's supply is isolated from the amp. Otherwise GBUF gets shorted to ground.
+- **Audio out:** the board is the Music Maker **with** the 3 W amp (product 1788). Its line out feeds the Donner DDA-80's 1/4" input, in mono (the sketch's Mono setting).
+  - Wiring: the left line-out (pad of the 220 uF cap C2 facing the headphone jack) -> 1 kOhm -> 1/4" jack tip; the headphone jack's sleeve pad (ground) -> 1/4" jack sleeve.
+  - On this board the line out is ground-referenced (220 uF output caps), so the sleeve really is ground.
+  - **Never wire the speaker terminals to the 1/4" jack:** the amp is bridged (BTL), neither terminal is ground, and grounding one shorts the amp.
 - **Knob:** wired to **A0/A1** (A/B, pin-change interrupt) and **A2** (push), per the Arduino session.
 - **Display serial:** the display is on the Uno's hardware serial (D0/D1). Unplug it while uploading code.
   - It now runs at **489600 baud**: the display's `T5UIC1.CFG` was changed, and the Uno uses `Serial.begin(500000)`.
-  - The firmware is in `Documents\Arduino\coffee_player`, owned by the Arduino session. Debug output there is behind a `DEBUG_SERIAL` switch.
+  - The firmware is `firmware/drum_player/drum_player.ino` (working copy `Documents\Arduino\drum_player`). Debug output is behind a `DEBUG_SERIAL` switch.

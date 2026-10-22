@@ -2,20 +2,21 @@
 
 ## Shield to Uno
 
-The HW-261 plugs straight onto the Uno. The sketch uses these pins:
+The Adafruit Music Maker shield (the coffee player's board) plugs straight onto the Uno. The sketch uses these pins:
 
-| Uno pin | HW-261 signal |
+| Uno pin | Music Maker signal |
 |---|---|
-| D8 | X-RESET |
-| D6 | X-CS (VS1053 command select) |
-| D7 | X-DCS (VS1053 data select) |
-| D2 | DREQ |
-| D9 | SD card CS |
+| D7 | VS1053 CS (command select) |
+| D6 | VS1053 DCS (data select) |
+| D3 | DREQ |
+| D4 | SD card CS |
 | D11 / D12 / D13 | SPI MOSI / MISO / SCK |
 
-The firmware starts the SD card first and holds the VS1053 in reset meanwhile. On the HW-261, a card that isn't in SPI mode yet blocks the bus.
+There's no reset pin. The firmware starts the VS1053 first, then the SD card.
 
-**Nothing else may use D2 or D6-D9.** The knob was once soldered to D7/D8/D9: turning or pressing it hit the VS1053 and SD card, so the card or chip failed at start-up at random.
+**Nothing else may use D3, D4, D6 or D7.** On the earlier HW-261 build the knob was soldered to the shield's pins: turning or pressing it hit the VS1053 and SD card, so the card or chip failed at start-up at random.
+
+(The red HW-261 shield, which used reset 8, CS 6, DCS 7, DREQ 2 and SD CS 9, has been dropped.)
 
 ## Screen (Ender-3 V2 DWIN) to Uno
 
@@ -42,7 +43,6 @@ The firmware starts the SD card first and holds the VS1053 in reset meanwhile. O
 ## Audio
 
 - The shield's **headphone jack** (3.5 mm stereo) goes to the Donner DDA-80 through a 3.5 mm to 1/4" cable.
-- Which jack: with the SD socket at the bottom right, the **top** jack is the audio out and the **bottom** one is the mic input.
 - **Mono** can be switched in the menu (Mono/Stereo). It's saved in EEPROM.
 - **Bass and treble** are in the menu's Tone popup (bass 0-15 dB below 100 Hz, treble -8 to +7 steps of 1.5 dB above 3 kHz). They're saved in EEPROM when you press Done.
 - **Caution:** on VS1053 boards the headphone jack's sleeve may be **GBUF** (about 1.25 V), not ground. Don't wire the jack sleeve to the Arduino's ground. Use a cable straight to the amp.

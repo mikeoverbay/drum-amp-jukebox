@@ -8,16 +8,18 @@
 // VLSI patches now load from PATCHES.BIN on the SD card (saves ~9 KB of flash).
 // VS1053bPatches.h is kept only as the source of that file.
 //
-// HW-261 copy of coffee_player: the red "VS1053 MP3 Shield" on an Uno,
-// same card (SONGIDX.TXT, PATCHES.BIN).
+// Drum player: Uno + Adafruit Music Maker shield (the coffee player's board) + DWIN
+// screen, same card layout as the coffee player (SONGIDX.TXT, PATCHES.BIN).
 // With the DWIN screen (hasScreen = true): exactly the coffee player, display on D0/D1.
 // Without it (hasScreen = false): it starts playing by itself, the knob is turn = volume,
 // press = next random song, hold 1 s = pause (press again to resume), and USB Serial
 // (115200) shows what plays and takes commands; type h for the list.
 
-// HW-261 pins: X-RESET 8, X-CS 6, X-DCS 7, DREQ 2, SD CS 9 (SPI on D11-D13).
-const uint8_t CARD_CS = 9;
-Adafruit_VS1053_FilePlayer player(8, 6, 7, 2, CARD_CS);
+// Adafruit Music Maker pins: CS 7, DCS 6, DREQ 3, SD CS 4, no reset pin (SPI on D11-D13).
+// (The red HW-261 shield used reset 8, CS 6, DCS 7, DREQ 2, SD CS 9 and started its card
+// first; it has been dropped.)
+const uint8_t CARD_CS = 4;
+Adafruit_VS1053_FilePlayer player(-1, 7, 6, 3, CARD_CS);
 // Runtime setting: false for no screen (D0/D1 then go to the USB Serial Monitor).
 bool hasScreen = true;
 uint16_t songCount = 0;
@@ -1121,21 +1123,7 @@ void setup() {
   }
   showSplash();
   unsigned long splashStart = millis();
-  // On the HW-261 a card not yet in SPI mode holds MISO low and blocks the VS1053, so
-  // the card starts first. The VS1053 is held in reset with both selects high meanwhile,
-  // so it can't answer the card's commands either.
-  pinMode(6, OUTPUT); digitalWrite(6, HIGH); // X-CS
-  pinMode(7, OUTPUT); digitalWrite(7, HIGH); // X-DCS
-  pinMode(8, OUTPUT); digitalWrite(8, LOW);  // X-RESET
-  // A few tries: the screen powering up at the same time can make the first one fail.
-  bool cardOk = false;
-  for (uint8_t attempt = 0; attempt < 5 && !cardOk; attempt++) {
-    if (attempt) delay(300);
-    cardOk = SD.begin(CARD_CS);
-  }
-  if (!cardOk) halt(F("ERROR: SD card not found."));
-  digitalWrite(8, HIGH);
-  delay(10);
+  // VS1053 first, then the card, as on the coffee player. A few tries each.
   bool vsOk = false;
   for (uint8_t attempt = 0; attempt < 3 && !vsOk; attempt++) {
     if (attempt) delay(200);
@@ -1151,6 +1139,12 @@ void setup() {
     halt(F("VS1053 wrong reply: not a VS1053?"));
   }
   dbgln(F("VS1053 found."));
+  bool cardOk = false;
+  for (uint8_t attempt = 0; attempt < 5 && !cardOk; attempt++) {
+    if (attempt) delay(300);
+    cardOk = SD.begin(CARD_CS);
+  }
+  if (!cardOk) halt(F("ERROR: SD card not found."));
   countSongs();
   initializeRandom();
   loadSettings(); // Mono, before the patches apply it.

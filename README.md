@@ -2,9 +2,9 @@
 
 This is an MP3 jukebox for drumming along. It plays your song library through a **Donner DDA-80** drum amp, and you pick songs on an **Ender-3 V2 DWIN screen** with its knob.
 
-It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits in a 3D-printed sloped console case.
+It runs on an **Arduino Uno** with an **Adafruit Music Maker** (VS1053) shield and sits in a 3D-printed sloped console case.
 
-![case](cad/drumcase_tshape_back.svg)
+![case](cad/previews/console_front.png)
 
 ## What it does
 
@@ -19,13 +19,13 @@ It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits i
 | Folder | What's in it |
 |---|---|
 | [`firmware/drum_player/`](firmware/drum_player/) | The Arduino sketch, plus the screen's flash set (`DWIN_SET/`) and the button art source (`tone_art/`) |
-| [`cad/`](cad/) | The printed case: CadQuery source, STEP files, the shield model and the reference models. See [cad/README.md](cad/README.md) |
+| [`cad/`](cad/) | The printed console case: CadQuery source, STEP and STL files, previews and the reference models. See [cad/README.md](cad/README.md) |
 | [`sd-card/`](sd-card/) | Tools to build the music card: `MakeSongIndex.ps1`, the `SONG_NAMES.txt` title list, and `PATCHES.BIN` (VLSI VS1053b patches) |
 | [`docs/`](docs/) | [Parts list](docs/parts-list.md) and [wiring](docs/wiring.md) |
 
 ## Getting it going
 
-1. **Print the case:** see [cad/README.md](cad/README.md). The hood prints standing on its back wall, and the bottom cover is a flat plate.
+1. **Print the case:** `cad/stl/hood.stl` and `cad/stl/bottom_cover.stl`; see [cad/README.md](cad/README.md). The hood prints standing on its back wall, and the bottom cover is a flat plate.
 2. **Flash the screen:**
    1. Copy `firmware/drum_player/DWIN_SET/` to the root of a microSD card.
    2. With the screen powered off, insert the card and power it on. It shows blue, then orange when it's done.
@@ -43,6 +43,6 @@ It runs on an **Arduino Uno** with a red **HW-261 VS1053 MP3 shield** and sits i
 
 ## Status
 
-- The case is designed but not printed yet. Check how far the narrow side walls flex when you pop the board in.
+- The case is the sloped console case, shared with the coffee player design: Uno + Music Maker hanging under the deck on gusseted standoffs, with the plugs through the back wall. The printable files in `cad/stl` are mikeoverbay's Shapr3D edit of it, with standoff corners trimmed for solder-pin clearance. One Uno screw hole is 1.7 mm off; see `cad/README.md`.
 - The firmware runs on the hardware: the menu, Tone popup and playback all work.
 - The firmware here is a **copy** of `Documents\Arduino\drum_player`, taken 2026-10-21. The drum session still works in the original, so copy its changes in when they land.

@@ -20,8 +20,7 @@ import cadquery as cq
 HERE = Path(__file__).resolve().parent
 SRC = HERE / "reference" / "arduino_uno_r3.step"
 FIXED = Path.home() / "OneDrive" / "Desktop" / "STEP files" / "ARDUINO UNO R3 Step - fixed to Arduino drawing.STEP"
-OUT = HERE / "reference" / "arduino_uno_r3_coloured.step"   # no artwork: opens in Shapr3D
-OUT_ART = HERE / "reference" / "arduino_uno_r3_coloured_with_artwork.step"   # Shapr3D crashes on it
+OUT = HERE / "reference" / "arduino_uno_r3_coloured.step"   # board artwork: see decals/
 # Arduino's own UNO Rev3e board file (CC BY-SA 4.0): traces, pads and silkscreen are drawn on
 # the top from it (board_art.py). The Uno prints its labels from layer 25 as well as 21.
 BRD = HERE / "reference" / "boards" / "UNO-TH_Rev3e.brd"
@@ -105,10 +104,9 @@ def uno_assembly(art=True):
 
 
 def main():
-    for art, out in ((False, OUT), (True, OUT_ART)):
-        a, src = uno_assembly(art)
-        a.export(str(out))
-        print("wrote", out, "from", src.name)
+    a, src = uno_assembly(art=False)
+    a.export(str(OUT))
+    print("wrote", OUT, "from", src.name)
 
 
 if __name__ == "__main__":

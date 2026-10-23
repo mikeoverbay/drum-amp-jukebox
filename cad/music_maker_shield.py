@@ -21,10 +21,9 @@ from pathlib import Path
 import cadquery as cq
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "reference" / "adafruit_music_maker_amp.step"   # no artwork: opens in Shapr3D
-# With the board artwork as thin sheets (16 MB): fine in most viewers, but Shapr3D crashes on
-# it; there, use decals/music_maker_rev_e_top_decal.png as a decal instead.
-OUT_ART = HERE / "reference" / "adafruit_music_maker_amp_with_artwork.step"
+OUT = HERE / "reference" / "adafruit_music_maker_amp.step"
+# Board artwork goes on as a decal (decals/, make_decals.py): Shapr3D crashes on STEP files
+# with the artwork built in.
 # Adafruit's Rev E board file: traces, pads and silkscreen are drawn on the top from it
 # (board_art.py), if both are next to this script.
 BRD = HERE / "reference" / "boards" / "Adafruit-Music-Maker-MP3-Shield-RevE.brd"
@@ -164,7 +163,5 @@ if __name__ == "__main__":
     OUT.parent.mkdir(exist_ok=True)
     shield_assembly(art=False).export(str(OUT))
     print("wrote", OUT)
-    shield_assembly(art=True).export(str(OUT_ART))
-    print("wrote", OUT_ART)
     print(f"jack axis: y {JACK_Y}, {PCB_T + JACK_AXIS_Z:.1f} above the shield's PCB bottom, "
           f"nose to x {JACK_NOSE[1]}")

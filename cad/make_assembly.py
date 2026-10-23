@@ -14,10 +14,7 @@ import drum_case as dc
 import music_maker_shield as mm
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "drum_case_assembly.step"   # no board artwork: opens in Shapr3D (6.8 MB)
-# With the board artwork as thin sheets (33 MB): Shapr3D crashes on it; there, put the
-# decals/*.png images on the boards instead.
-OUT_ART = HERE / "drum_case_assembly_with_artwork.step"
+OUT = HERE / "drum_case_assembly.step"   # board artwork: put the decals/*.png images on the boards
 HOOD = HERE / "drum_case_hood.step"
 COVER = HERE / "drum_case_bottom_cover.step"
 BEIGE, DARK_BEIGE = cq.Color(0.87, 0.82, 0.70), cq.Color(0.70, 0.66, 0.56)
@@ -39,7 +36,7 @@ def shield_location():
     return cq.Location(t)
 
 
-def build(art=True):
+def build(art=False):
     a = cq.Assembly(name="drum_player")
     a.add(cq.importers.importStep(str(HOOD)).val(), name="hood", color=BEIGE)
     a.add(cq.importers.importStep(str(COVER)).val(), name="bottom_cover", color=DARK_BEIGE)
@@ -53,9 +50,8 @@ def build(art=True):
 
 
 def main():
-    for art, out in ((False, OUT), (True, OUT_ART)):
-        build(art).export(str(out))
-        print("wrote", out)
+    build().export(str(OUT))
+    print("wrote", OUT)
 
 
 if __name__ == "__main__":

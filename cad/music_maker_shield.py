@@ -1,7 +1,7 @@
-"""Adafruit Music Maker MP3 shield, 3 W amp version (product 1788, the "v4" board), as a
+"""Adafruit Music Maker MP3 shield, 3 W amp version (product 1788, Rev E board), as a
 simple 3D model for checking the case.
 
-Positions come from Adafruit's own board file, Adafruit-Music-Maker-MP3-Shield.brd in
+Positions come from Adafruit's own board file, Adafruit-Music-Maker-MP3-Shield-RevE.brd in
 https://github.com/adafruit/Adafruit-Music-Maker-MP3-Shield-PCB (CC BY-SA, Limor Fried /
 Adafruit Industries). Part heights are typical datasheet values, not measured on the board:
 check the ones that matter (jack axis height, terminal height) with calipers.
@@ -22,6 +22,9 @@ import cadquery as cq
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "reference" / "adafruit_music_maker_amp.step"
+# Adafruit's Rev E board file: traces, pads and silkscreen are drawn on the top from it
+# (board_art.py), if both are next to this script.
+BRD = HERE / "reference" / "boards" / "Adafruit-Music-Maker-MP3-Shield-RevE.brd"
 
 PCB_T = 1.6
 # Uno shield outline from the board file (layer 20 of the ARDUINOR3_ICSP footprint).
@@ -30,12 +33,14 @@ OUTLINE = [(0, 0), (66.04, 0), (66.04, 2.54), (68.58, 5.08), (68.58, 37.846), (6
 HOLES = [(13.97, 2.54), (15.24, 50.80), (66.04, 35.56)]   # 3.2 mm, Uno R3 positions
 HOLE_D = 3.2
 
-# 3.5 mm stereo jack X1 (4UCONN 19269): opening at the USB end, axis along x.
-JACK_Y = 26.162                    # axis, from the board file
-JACK_BODY = (0.635, 15.135, 6.0)   # x0, x1, width (footprint silkscreen)
+# 3.5 mm stereo jack X1 (PJ-328 on Rev E; the older v4 board had a 4UCONN 19269 at y 26.162,
+# x 0.635-15.135): opening at the USB end, axis along x. Its two locating pegs are at x 4.125
+# and 11.125 on the axis (matches mikeoverbay's photo of the back).
+JACK_Y = 25.908                    # axis, from the board file
+JACK_BODY = (0.625, 15.225, 6.0)   # x0, x1, width (footprint silkscreen)
 JACK_H = 5.0                       # body height (typical)
 JACK_AXIS_Z = 2.5                  # axis above the PCB top (typical)
-JACK_NOSE = (5.0, -1.9)            # nose diameter, and how far it reaches (x)
+JACK_NOSE = (5.0, -1.865)          # nose diameter, and how far it reaches (x)
 
 # Speaker screw terminals (3.5 mm pitch, 2 way), wire entries facing the USB end.
 TERMINAL_YS = (17.022, 8.968)      # LEFTSPK, RIGHTSPK centres
@@ -111,9 +116,10 @@ def headers():
 
 
 # Colours, roughly as on the real board (Adafruit's product photo).
-SOLDERMASK = cq.Color(0.06, 0.24, 0.62)   # Adafruit blue
+SOLDERMASK = cq.Color(0.06, 0.30, 0.78)   # Adafruit blue
+TRACE = cq.Color(0.12, 0.40, 0.90)        # copper under the mask, a shade lighter
 BLACK = cq.Color(0.07, 0.07, 0.08)
-TERMINAL_BLUE = cq.Color(0.10, 0.45, 0.90)
+TERMINAL_GREEN = cq.Color(0.42, 0.78, 0.58)   # Rev E ships with green terminals soldered on
 STEEL = cq.Color(0.74, 0.75, 0.78)
 CAP = cq.Color(0.88, 0.88, 0.90)          # silver-white can
 GOLD = cq.Color(0.83, 0.66, 0.22)
@@ -125,9 +131,17 @@ def shield_assembly():
     """cq.Assembly in board coordinates, coloured roughly like the real board."""
     a = cq.Assembly(name="music_maker_amp")
     a.add(pcb(), name="pcb", color=SOLDERMASK)
+    try:
+        import board_art as ba
+    except ImportError:
+        ba = None
+    if ba is not None and BRD.exists():
+        colours = dict(ba.COLOURS, copper=(TRACE.toTuple()[:3]))
+        for layer, solid in ba.art_solids(ba.board_art(str(BRD)), PCB_T).items():
+            a.add(solid, name=f"art_{layer}", color=cq.Color(*colours[layer]))
     a.add(jack(), name="jack_3_5mm", color=BLACK)
     for i, t in enumerate(terminals()):
-        a.add(t, name=f"speaker_terminal_{'LR'[i]}", color=TERMINAL_BLUE)
+        a.add(t, name=f"speaker_terminal_{'LR'[i]}", color=TERMINAL_GREEN)
     for (name, *_), p in zip(BOXES + [("cap_c1",), ("cap_c2",)], parts()):
         a.add(p, name=name, color=CAP if name.startswith("cap") else PART_COLOURS[name])
     plastic, pins = headers()

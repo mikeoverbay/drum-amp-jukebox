@@ -88,15 +88,16 @@ UNO_USB_OVERHANG = 6.35
 # room for the plug bodies, since the wall is 3.5 mm out from the sockets.
 # USB-B socket: 11.8 wide centred 38.10 from the power-header edge (Arduino's UNO R3 file,
 # confirmed by caliper: 9.33 vs 9.34 from the far edge), about 11.0 tall on the Uno's board.
-# Headphone jack nose: 5.0 dia, axis 26.16 from the power-header edge (Adafruit's board file,
+# Headphone jack nose: 5.0 dia, axis 25.91 from the power-header edge (Adafruit's board file,
 # music_maker_shield.py) and MM_GAP + 1.6 board + 2.5 axis (typical) = 15.4 above the Uno.
 USB_SOCKET = (38.10, 5.5, 11.8, 11.0)    # u, h above the Uno's component side (centre), w, h
-HEADPHONE_NOSE = (26.16, 15.4, 5.0)      # u, h, diameter
+HEADPHONE_NOSE = (25.91, 15.4, 5.0)      # u, h, diameter (Rev E jack)
 USB_GROW = 1.5        # the USB hole is the socket plus this all round (mikeoverbay)
 HEADPHONE_GROW = 3.0  # the headphone hole is the jack nose plus this on the diameter, for the plug
+# mikeoverbay's hood (Shapr3D) has one opening for both, centred off his models: on the
+# inside face X -16.84 .. 6.12, Z 20.39 .. 43.10. Matched here.
 BACK_PLUGS = {
-    "Uno USB": (USB_SOCKET[0], USB_SOCKET[1], USB_SOCKET[2] + 2 * USB_GROW, USB_SOCKET[3] + 2 * USB_GROW),
-    "Music Maker headphone": (HEADPHONE_NOSE[0], HEADPHONE_NOSE[1], HEADPHONE_NOSE[2] + HEADPHONE_GROW, 0.0),
+    "USB + headphone": (32.03, 9.655, 22.96, 22.71),
 }
 # Two 1/4" (6.35 mm) panel jacks on the back wall, either side of the plug holes.
 JACK_D = 9.8               # Switchcraft-style open-frame jack: 3/8"-32 bushing (9.53) + print allowance
@@ -597,8 +598,7 @@ if __name__ == "__main__":
             jx = UNO_X - (mm.JACK_Y - UNO_W / 2)
             jz = uno_back_z - UNO_PCB_T - MM_GAP - (mm.PCB_T + mm.JACK_AXIS_Z)
             ox, oz = uno_to_wall(*HEADPHONE_NOSE[:2])
-            print(f"{'Music Maker jack axis X, Z (mm)':30} {jx:.1f}, {jz:.1f}  "
-                  f"(headphone hole centre {ox:.1f}, {oz:.1f}: off by {jx - ox:+.1f}, {jz - oz:+.1f})")
+            print(f"{'Music Maker jack axis X, Z (mm)':30} {jx:.1f}, {jz:.1f}")
             clash = shield.intersect(hood).Volume()
             print(f"{'Music Maker vs hood overlap':30} {clash:.2f} mm3")
         else:

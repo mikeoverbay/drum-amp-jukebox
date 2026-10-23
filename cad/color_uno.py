@@ -20,7 +20,8 @@ import cadquery as cq
 HERE = Path(__file__).resolve().parent
 SRC = HERE / "reference" / "arduino_uno_r3.step"
 FIXED = Path.home() / "OneDrive" / "Desktop" / "STEP files" / "ARDUINO UNO R3 Step - fixed to Arduino drawing.STEP"
-OUT = HERE / "reference" / "arduino_uno_r3_coloured.step"
+OUT = HERE / "reference" / "arduino_uno_r3_coloured.step"   # no artwork: opens in Shapr3D
+OUT_ART = HERE / "reference" / "arduino_uno_r3_coloured_with_artwork.step"   # Shapr3D crashes on it
 # Arduino's own UNO Rev3e board file (CC BY-SA 4.0): traces, pads and silkscreen are drawn on
 # the top from it (board_art.py). The Uno prints its labels from layer 25 as well as 21.
 BRD = HERE / "reference" / "boards" / "UNO-TH_Rev3e.brd"
@@ -76,7 +77,7 @@ def colour_of(face):
     return BLACK
 
 
-def uno_assembly():
+def uno_assembly(art=True):
     """The Uno as a cq.Assembly: the model with per-face colours, plus the artwork sheets."""
     src = FIXED if FIXED.exists() else SRC
     shape = cq.importers.importStep(str(src)).val()
@@ -95,7 +96,7 @@ def uno_assembly():
         import board_art as ba
     except ImportError:
         ba = None
-    if ba is not None and BRD.exists():
+    if art and ba is not None and BRD.exists():
         art_colours = dict(ba.COLOURS, copper=TRACE, pads=TIN)
         layers = ba.board_art(str(BRD), plain_silk=("21", "25"))
         for layer, sheet in ba.art_solids(layers, PCB_T, offset=(-OX, -OY)).items():
@@ -104,9 +105,10 @@ def uno_assembly():
 
 
 def main():
-    a, src = uno_assembly()
-    a.export(str(OUT))
-    print("wrote", OUT, "from", src.name)
+    for art, out in ((False, OUT), (True, OUT_ART)):
+        a, src = uno_assembly(art)
+        a.export(str(out))
+        print("wrote", out, "from", src.name)
 
 
 if __name__ == "__main__":

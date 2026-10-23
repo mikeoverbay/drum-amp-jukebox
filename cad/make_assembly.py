@@ -14,7 +14,10 @@ import drum_case as dc
 import music_maker_shield as mm
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "drum_case_assembly.step"
+OUT = HERE / "drum_case_assembly.step"   # no board artwork: opens in Shapr3D (6.8 MB)
+# With the board artwork as thin sheets (33 MB): Shapr3D crashes on it; there, put the
+# decals/*.png images on the boards instead.
+OUT_ART = HERE / "drum_case_assembly_with_artwork.step"
 HOOD = HERE / "drum_case_hood.step"
 COVER = HERE / "drum_case_bottom_cover.step"
 BEIGE, DARK_BEIGE = cq.Color(0.87, 0.82, 0.70), cq.Color(0.70, 0.66, 0.56)
@@ -36,19 +39,23 @@ def shield_location():
     return cq.Location(t)
 
 
-def main():
+def build(art=True):
     a = cq.Assembly(name="drum_player")
     a.add(cq.importers.importStep(str(HOOD)).val(), name="hood", color=BEIGE)
     a.add(cq.importers.importStep(str(COVER)).val(), name="bottom_cover", color=DARK_BEIGE)
     disp = dc.display_model()
     if disp is not None:
         a.add(disp, name="display_DisplayV2", color=cq.Color(0.1, 0.4, 0.2))
-    uno, _ = color_uno.uno_assembly()
+    uno, _ = color_uno.uno_assembly(art)
     a.add(uno, name="arduino_uno", loc=uno_location())
-    a.add(mm.shield_assembly(), name="music_maker", loc=shield_location())
-    a.export(str(OUT))
-    print("wrote", OUT)
+    a.add(mm.shield_assembly(art), name="music_maker", loc=shield_location())
     return a
+
+
+def main():
+    for art, out in ((False, OUT), (True, OUT_ART)):
+        build(art).export(str(out))
+        print("wrote", out)
 
 
 if __name__ == "__main__":

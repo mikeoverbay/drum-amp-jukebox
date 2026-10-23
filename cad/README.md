@@ -23,6 +23,9 @@ This is a 3D-printable sloped console in the style of a classic electronics encl
 | `drum_case_bottom_cover.step` | The bottom cover: a 3 mm plate held by 4 screws from below. It comes off without disturbing any wiring |
 | `drum_case.py` | Parametric CadQuery source of the base design. `python drum_case.py` writes STEPs, STLs and an assembly (with the Music Maker model) to `generated/` |
 | `music_maker_shield.py` | Adafruit Music Maker amp shield (1788) model from Adafruit's board file; writes `reference/adafruit_music_maker_amp.step` |
+| `make_assembly.py` | Builds `drum_case_assembly.step` (the hood above, the cover, the screen and both coloured boards; opens in Shapr3D) and `drum_case_assembly_with_artwork.step` (with the boards' traces, pads and silkscreen; Shapr3D crashes on it, other viewers are fine) |
+| `board_art.py`, `color_uno.py` | Board artwork from the Eagle files in `reference/boards/`, and the coloured Uno |
+| `decals/` | Top-side artwork of each board as a PNG (40 px/mm, transparent outside the outline). In Shapr3D, put it on the board's top face as a decal, sized 68.58 x 53.34 mm |
 | `previews/` | Renders and section views |
 
 The STLs for printing are in `stl/`.

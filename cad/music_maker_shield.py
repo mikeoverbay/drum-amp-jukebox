@@ -21,7 +21,10 @@ from pathlib import Path
 import cadquery as cq
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "reference" / "adafruit_music_maker_amp.step"
+OUT = HERE / "reference" / "adafruit_music_maker_amp.step"   # no artwork: opens in Shapr3D
+# With the board artwork as thin sheets (16 MB): fine in most viewers, but Shapr3D crashes on
+# it; there, use decals/music_maker_rev_e_top_decal.png as a decal instead.
+OUT_ART = HERE / "reference" / "adafruit_music_maker_amp_with_artwork.step"
 # Adafruit's Rev E board file: traces, pads and silkscreen are drawn on the top from it
 # (board_art.py), if both are next to this script.
 BRD = HERE / "reference" / "boards" / "Adafruit-Music-Maker-MP3-Shield-RevE.brd"
@@ -127,7 +130,7 @@ PART_COLOURS = {"vs1053": BLACK, "microsd": STEEL, "74hc4050": BLACK, "ts2012_am
                 "regulator": BLACK, "crystal": STEEL, "reset_button": STEEL}
 
 
-def shield_assembly():
+def shield_assembly(art=True):
     """cq.Assembly in board coordinates, coloured roughly like the real board."""
     a = cq.Assembly(name="music_maker_amp")
     a.add(pcb(), name="pcb", color=SOLDERMASK)
@@ -135,7 +138,7 @@ def shield_assembly():
         import board_art as ba
     except ImportError:
         ba = None
-    if ba is not None and BRD.exists():
+    if art and ba is not None and BRD.exists():
         colours = dict(ba.COLOURS, copper=(TRACE.toTuple()[:3]))
         for layer, solid in ba.art_solids(ba.board_art(str(BRD)), PCB_T).items():
             a.add(solid, name=f"art_{layer}", color=cq.Color(*colours[layer]))
@@ -159,7 +162,9 @@ def shield_solid():
 
 if __name__ == "__main__":
     OUT.parent.mkdir(exist_ok=True)
-    shield_assembly().export(str(OUT))
+    shield_assembly(art=False).export(str(OUT))
     print("wrote", OUT)
+    shield_assembly(art=True).export(str(OUT_ART))
+    print("wrote", OUT_ART)
     print(f"jack axis: y {JACK_Y}, {PCB_T + JACK_AXIS_Z:.1f} above the shield's PCB bottom, "
           f"nose to x {JACK_NOSE[1]}")

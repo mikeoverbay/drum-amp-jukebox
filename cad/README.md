@@ -1,9 +1,9 @@
 # drum-amp-jukebox case: Ender-3 V2 display + Arduino Uno + Music Maker
 
 > **The case to print:** `stl/drum_case_hood.stl` and `stl/drum_case_bottom_cover.stl` (STEP: `drum_case_hood.step`, `drum_case_bottom_cover.step`).
-> **The hood is mikeoverbay's Shapr3D edit (2026-10-22)** of the script's design. He changed the back wall:
->   - one opening for the Uno's USB-B and the Music Maker's headphone jack together;
->   - a single 1/4" jack hole on the USB side (X = -50 from behind), so the audio wires from the Music Maker's jack don't cross the boards.
+> **The hood and the bottom cover are mikeoverbay's Shapr3D edits (2026-10-23/24)**, with the hole positions he set from his own boards:
+>   - the back wall's USB, headphone and 1/4" jack holes and the Uno standoffs are his; they take precedence over the Arduino/Adafruit drawing numbers quoted elsewhere in this file;
+>   - the bottom cover has two penny pockets (19.05 mm, 14 mm deep, about 9 US pennies each) for weight, and four shallow round recesses underneath.
 > `drum_case.py` is the parametric base design. It writes only to `generated/` (git-ignored), so it can't overwrite his hood. Its back wall has separate USB and headphone holes.
 > **Uno holes:** Arduino's official UNO R3 positions, (13.97, 2.54), (15.24, 50.80), (66.04, 7.62) and (66.04, 35.56) mm. The `reference/arduino_uno_r3.step` model is for looks only.
 
